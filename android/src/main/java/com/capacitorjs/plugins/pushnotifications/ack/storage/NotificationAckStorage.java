@@ -36,22 +36,17 @@ public class NotificationAckStorage {
 
     public List<NotificationLogItem> getNotificationLogItems(int maxValues) {
         List<NotificationLogItem> values = new ArrayList<>();
-        String[] projection = {
-                NotificationContentProviderDefinition.COLUMN_KEY,
-                NotificationContentProviderDefinition.COLUMN_DEVICEID,
-                NotificationContentProviderDefinition.COLUMN_NOTIFICATIONLOGID,
-                NotificationContentProviderDefinition.COLUMN_INTERVENTIONID,
-                NotificationContentProviderDefinition.COLUMN_ORIGIN};
+        String[] projection = NotificationContentProviderDefinition.DEFAULT_PROJECTION;
         Cursor cursor = contentResolver.query(NotificationContentProviderDefinition.CONTENT_URI, projection, null, null, NotificationContentProviderDefinition.COLUMN_KEY + " DESC");
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
                     NotificationLogItem logItem = new NotificationLogItem(
-                            cursor.getString(0),
-                            cursor.getString(1),
-                            cursor.getString(2),
-                            cursor.getString(3),
-                            cursor.getString(4));
+                            getValueOrDefault(cursor, NotificationContentProviderDefinition.COLUMN_KEY),
+                            getValueOrDefault(cursor, NotificationContentProviderDefinition.COLUMN_DEVICEID),
+                            getValueOrDefault(cursor, NotificationContentProviderDefinition.COLUMN_NOTIFICATIONLOGID),
+                            getValueOrDefault(cursor, NotificationContentProviderDefinition.COLUMN_INTERVENTIONID),
+                            getValueOrDefault(cursor, NotificationContentProviderDefinition.COLUMN_ORIGIN));
                     values.add(logItem);
                     if (values.size() >= maxValues) {
                         break;
@@ -62,6 +57,12 @@ public class NotificationAckStorage {
             cursor.close();
         }
         return values;
+    }
+
+    private static String getValueOrDefault(Cursor cursor, String columnName)
+    {
+        int index = cursor.getColumnIndex(columnName);
+        return index >= 0 ? cursor.getString(index) : null;
     }
 
     private static ContentValues createContentValues(String key, NotificationLogItem logItem) {

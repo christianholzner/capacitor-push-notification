@@ -9,8 +9,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class NotificationContentProvider extends ContentProvider {
 
@@ -52,12 +57,16 @@ public class NotificationContentProvider extends ContentProvider {
                         String[] selectionArgs, String sortOrder) {
         Log.i("NotificationContentProvider", "query " + TABLE_NAME);
 
-        if (sortOrder == null || sortOrder == "") {
+        if (sortOrder == null || sortOrder.equals("")) {
             sortOrder = NotificationContentProviderDefinition.COLUMN_KEY;
         }
 
-        Cursor c = db.query(TABLE_NAME, projection, selection, selectionArgs, null,
-                null, sortOrder);
+        if (projection == null || projection.length == 0) {
+            projection = NotificationContentProviderDefinition.DEFAULT_PROJECTION;
+        }
+
+        SQLiteQueryBuilder queryBuilder = buildQueryBuilder(projection);
+        Cursor c = executeQuery(queryBuilder, selection, selectionArgs, sortOrder, uri);
         c.setNotificationUri(getContext().getContentResolver(), uri);
         return c;
     }
@@ -75,13 +84,13 @@ public class NotificationContentProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection,
-                      String[] selectionArgs) {
+    public int update(Uri uri, ContentValues values, String whereClause,
+                      String[] whereArgs) {
         Log.i("NotificationContentProvider", "update " + TABLE_NAME);
         int count = 0;
         switch (uriMatcher.match(uri)) {
             case uriCode:
-                count = db.update(TABLE_NAME, values, selection, selectionArgs);
+                count = db.update(TABLE_NAME, values, whereClause, whereArgs);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -91,12 +100,12 @@ public class NotificationContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(Uri uri, String whereClause, String[] whereArgs) {
         Log.i("NotificationContentProvider", "delete " + TABLE_NAME);
         int count = 0;
         switch (uriMatcher.match(uri)) {
             case uriCode:
-                count = db.delete(TABLE_NAME, selection, selectionArgs);
+                count = db.delete(TABLE_NAME, whereClause, whereArgs);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -136,5 +145,41 @@ public class NotificationContentProvider extends ContentProvider {
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
             onCreate(db);
         }
+    }
+
+    private static SQLiteQueryBuilder buildQueryBuilder(String[] projection) {
+        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+        queryBuilder.setStrict(true);
+        queryBuilder.setTables(TABLE_NAME);
+
+        HashMap<String, String> projectionMap = buildProjectionMap(NotificationContentProviderDefinition.DEFAULT_PROJECTION);
+        String[] validProjection = filterValidProjection(projection, projectionMap);
+        queryBuilder.setProjectionMap(buildProjectionMap(validProjection));
+
+        return queryBuilder;
+    }
+
+    private Cursor executeQuery(SQLiteQueryBuilder queryBuilder, String whereClause, String[] whereArgs, String sortOrder, Uri uri) {
+        Cursor c = queryBuilder.query(db, null, whereClause, whereArgs, null, null, sortOrder);
+
+        c.setNotificationUri(getContext().getContentResolver(), uri);
+
+        return c;
+    }
+    private static HashMap<String, String> buildProjectionMap(String[] columns) {
+        HashMap<String, String> projectionMap = new HashMap<>();
+        for (String column : columns) {
+            projectionMap.put(column, column);
+        }
+        return projectionMap;
+    }
+    private static String[] filterValidProjection(String[] projection, HashMap<String, String> projectionMap) {
+        List<String> validColumns = new ArrayList<>();
+        for (String column : projection) {
+            if (projectionMap.containsKey(column)) {
+                validColumns.add(column);
+            }
+        }
+        return validColumns.toArray(new String[0]);
     }
 }

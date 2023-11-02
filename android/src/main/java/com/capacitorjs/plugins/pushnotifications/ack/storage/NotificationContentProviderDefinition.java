@@ -11,4 +11,12 @@ public final class NotificationContentProviderDefinition {
     public static final String COLUMN_NOTIFICATIONLOGID = "notificationLogId";
     public static final String COLUMN_INTERVENTIONID = "interventionId";
     public static final String COLUMN_ORIGIN = "origin";
+
+    public static final String[] DEFAULT_PROJECTION = {
+            COLUMN_KEY,
+            COLUMN_DEVICEID,
+            COLUMN_NOTIFICATIONLOGID,
+            COLUMN_INTERVENTIONID,
+            COLUMN_ORIGIN
+    };
 }
