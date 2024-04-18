@@ -6,14 +6,15 @@ public class PushNotificationsHandler: NSObject, NotificationHandlerProtocol {
     var notificationRequestLookup = [String: JSObject]()
 
     public func requestPermissions(with completion: ((Bool, Error?) -> Void)? = nil) {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge, .criticalAlert]) { granted, error in
-            completion?(granted, error)
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge, .criticalAlert]) {
+            granted,
+            error in completion?(granted, error)
         }
     }
 
     public func checkPermissions(with completion: ((UNAuthorizationStatus) -> Void)? = nil) {
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
-            completion?(settings.authorizationStatus)
+        UNUserNotificationCenter.current().getNotificationSettings {
+            settings in completion?(settings.authorizationStatus)
         }
     }
 
@@ -32,17 +33,16 @@ public class PushNotificationsHandler: NSObject, NotificationHandlerProtocol {
         if let optionsArray = self.plugin?.getConfig().getArray("presentationOptions") as? [String] {
             var presentationOptions = UNNotificationPresentationOptions.init()
 
-            optionsArray.forEach { option in
-                switch option {
-                case "alert":
-                    presentationOptions.insert(.alert)
-                case "badge":
-                    presentationOptions.insert(.badge)
-
-                case "sound":
-                    presentationOptions.insert(.sound)
-                default:
-                    print("Unrecogizned presentation option: \(option)")
+            optionsArray.forEach {
+                option in switch option {
+                    case "alert":
+                        presentationOptions.insert(.alert)
+                    case "badge":
+                        presentationOptions.insert(.badge)
+                    case "sound":
+                        presentationOptions.insert(.sound)
+                    default:
+                        print("Unrecognized presentation option: \(option)")
                 }
             }
 

@@ -302,6 +302,35 @@
         "slug": "addlistenerpushnotificationactionperformed"
       },
       {
+        "name": "addListener",
+        "signature": "(eventName: 'silentNotificationReceived', listenerFunc: (notification: PushNotificationSchema) => void) => Promise<PluginListenerHandle> & PluginListenerHandle",
+        "parameters": [
+          {
+            "name": "eventName",
+            "docs": "",
+            "type": "'silentNotificationReceived'"
+          },
+          {
+            "name": "listenerFunc",
+            "docs": "",
+            "type": "(notification: PushNotificationSchema) => void"
+          }
+        ],
+        "returns": "Promise<PluginListenerHandle> & PluginListenerHandle",
+        "tags": [
+          {
+            "name": "since",
+            "text": "1.0.0"
+          }
+        ],
+        "docs": "Called when the device receives a background push notification.",
+        "complexTypes": [
+          "PluginListenerHandle",
+          "PushNotificationSchema"
+        ],
+        "slug": "addlistenersilentnotificationreceived"
+      },
+      {
         "name": "removeAllListeners",
         "signature": "() => Promise<void>",
         "parameters": [],
@@ -875,6 +904,13 @@
             "PresentationOption"
           ],
           "type": "PresentationOption[]"
+        },
+        {
+          "name": "apiUrl",
+          "tags": [],
+          "docs": "Server api url",
+          "complexTypes": [],
+          "type": "string | undefined"
         }
       ],
       "docs": "You can configure the way the push notifications are displayed when the app is in foreground."
