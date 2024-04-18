@@ -1,6 +1,6 @@
 {
   "name": "@capacitor/push-notifications",
-  "version": "5.0.6",
+  "version": "5.0.8",
   "description": "The Push Notifications API provides access to native push notifications.",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -27,6 +27,11 @@
     "plugin",
     "native"
   ],
+  "scripts": {
+    "docgen": "docgen --api PushNotificationsPlugin --output-readme README.md --output-json dist/docs.json",
+    "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.js",
+    "clean": "rimraf ./dist"
+  },
   "devDependencies": {
     "@capacitor/android": "^5.0.0",
     "@capacitor/cli": "^5.0.0",

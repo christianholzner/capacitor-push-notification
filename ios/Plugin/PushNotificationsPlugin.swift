@@ -23,14 +23,19 @@ public class PushNotificationsPlugin: CAPPlugin {
         self.notificationDelegateHandler.plugin = self
 
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(self.didRegisterForRemoteNotificationsWithDeviceToken(notification:)),
-                                               name: .capacitorDidRegisterForRemoteNotifications,
-                                               object: nil)
+                                            selector: #selector(self.onBackgroundNotification(notification:)),
+                                            name: NSNotification.Name("silentNotificationReceived"),
+                                            object: nil)
 
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(self.didFailToRegisterForRemoteNotificationsWithError(notification:)),
-                                               name: .capacitorDidFailToRegisterForRemoteNotifications,
-                                               object: nil)
+                                            selector: #selector(self.didRegisterForRemoteNotificationsWithDeviceToken(notification:)),
+                                            name: .capacitorDidRegisterForRemoteNotifications,
+                                            object: nil)
+
+        NotificationCenter.default.addObserver(self,
+                                            selector: #selector(self.didFailToRegisterForRemoteNotificationsWithError(notification:)),
+                                            name: .capacitorDidFailToRegisterForRemoteNotifications,
+                                            object: nil)
     }
 
     deinit {
@@ -165,6 +170,11 @@ public class PushNotificationsPlugin: CAPPlugin {
 
     @objc func listChannels(_ call: CAPPluginCall) {
         call.unimplemented("Not available on iOS")
+    }
+
+    @objc public func onBackgroundNotification(notification: Notification) {
+        debugPrint(notification)
+        self.notifyListeners("silentNotificationReceived", data: notification.userInfo as? [String : Any] ?? ["something": "happened"], retainUntilConsumed: true)
     }
 
     @objc public func didRegisterForRemoteNotificationsWithDeviceToken(notification: NSNotification) {

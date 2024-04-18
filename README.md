@@ -61,6 +61,7 @@ You can configure the way the push notifications are displayed when the app is i
 | Prop                      | Type                              | Description                                                                                                                                                                                                                                                                                                                                                                                          | Since |
 | ------------------------- | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
 | **`presentationOptions`** | <code>PresentationOption[]</code> | This is an array of strings you can combine. Possible values in the array are: - `badge`: badge count on the app icon is updated (default value) - `sound`: the device will ring/vibrate when the push notification is received - `alert`: the push notification is displayed in a native dialog An empty array can be provided if none of the options are desired. badge is only available for iOS. | 1.0.0 |
+| **`apiUrl`**              | <code>string</code>               | Server api url                                                                                                                                                                                                                                                                                                                                                                                       |       |
 
 ### Examples
 
@@ -70,7 +71,8 @@ In `capacitor.config.json`:
 {
   "plugins": {
     "PushNotifications": {
-      "presentationOptions": ["badge", "sound", "alert"]
+      "presentationOptions": ["badge", "sound", "alert"],
+      "apiUrl": undefined
     }
   }
 }
@@ -87,6 +89,7 @@ const config: CapacitorConfig = {
   plugins: {
     PushNotifications: {
       presentationOptions: ["badge", "sound", "alert"],
+      apiUrl: undefined,
     },
   },
 };
@@ -158,23 +161,53 @@ const getDeliveredNotifications = async () => {
 
 <docgen-index>
 
-* [`register()`](#register)
-* [`unregister()`](#unregister)
-* [`getDeliveredNotifications()`](#getdeliverednotifications)
-* [`removeDeliveredNotifications(...)`](#removedeliverednotifications)
-* [`removeAllDeliveredNotifications()`](#removealldeliverednotifications)
-* [`createChannel(...)`](#createchannel)
-* [`deleteChannel(...)`](#deletechannel)
-* [`listChannels()`](#listchannels)
-* [`checkPermissions()`](#checkpermissions)
-* [`requestPermissions()`](#requestpermissions)
-* [`addListener('registration', ...)`](#addlistenerregistration)
-* [`addListener('registrationError', ...)`](#addlistenerregistrationerror)
-* [`addListener('pushNotificationReceived', ...)`](#addlistenerpushnotificationreceived)
-* [`addListener('pushNotificationActionPerformed', ...)`](#addlistenerpushnotificationactionperformed)
-* [`removeAllListeners()`](#removealllisteners)
-* [Interfaces](#interfaces)
-* [Type Aliases](#type-aliases)
+- [@capacitor/push-notifications](#capacitorpush-notifications)
+  - [Install](#install)
+  - [iOS](#ios)
+  - [Android](#android)
+    - [Variables](#variables)
+  - [Push Notifications icon](#push-notifications-icon)
+  - [Push notifications appearance in foreground](#push-notifications-appearance-in-foreground)
+    - [Examples](#examples)
+  - [Silent Push Notifications / Data-only Notifications](#silent-push-notifications--data-only-notifications)
+      - [iOS](#ios-1)
+      - [Android](#android-1)
+  - [Common Issues](#common-issues)
+  - [Example](#example)
+  - [API](#api)
+    - [register()](#register)
+    - [unregister()](#unregister)
+    - [getDeliveredNotifications()](#getdeliverednotifications)
+    - [removeDeliveredNotifications(...)](#removedeliverednotifications)
+    - [removeAllDeliveredNotifications()](#removealldeliverednotifications)
+    - [createChannel(...)](#createchannel)
+    - [deleteChannel(...)](#deletechannel)
+    - [listChannels()](#listchannels)
+    - [checkPermissions()](#checkpermissions)
+    - [requestPermissions()](#requestpermissions)
+    - [addListener('registration', ...)](#addlistenerregistration-)
+    - [addListener('registrationError', ...)](#addlistenerregistrationerror-)
+    - [addListener('pushNotificationReceived', ...)](#addlistenerpushnotificationreceived-)
+    - [addListener('pushNotificationActionPerformed', ...)](#addlistenerpushnotificationactionperformed-)
+    - [addListener('silentNotificationReceived', ...)](#addlistenersilentnotificationreceived-)
+    - [removeAllListeners()](#removealllisteners)
+    - [Interfaces](#interfaces)
+      - [DeliveredNotifications](#deliverednotifications)
+      - [PushNotificationSchema](#pushnotificationschema)
+      - [Channel](#channel)
+      - [ListChannelsResult](#listchannelsresult)
+      - [PermissionStatus](#permissionstatus)
+      - [PluginListenerHandle](#pluginlistenerhandle)
+      - [Token](#token)
+      - [RegistrationError](#registrationerror)
+      - [ActionPerformed](#actionperformed)
+    - [Type Aliases](#type-aliases)
+      - [Importance](#importance)
+      - [Visibility](#visibility)
+      - [PermissionState](#permissionstate)
+      - [Development](#development)
+  - [To be able to modify the web, you need to install the following package](#to-be-able-to-modify-the-web-you-need-to-install-the-following-package)
+  - [Rebuild the web](#rebuild-the-web)
 
 </docgen-index>
 
@@ -439,6 +472,26 @@ Called when an action is performed on a push notification.
 --------------------
 
 
+### addListener('silentNotificationReceived', ...)
+
+```typescript
+addListener(eventName: 'silentNotificationReceived', listenerFunc: (notification: PushNotificationSchema) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+Called when the device receives a background push notification.
+
+| Param              | Type                                                                                                 |
+| ------------------ | ---------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'silentNotificationReceived'</code>                                                            |
+| **`listenerFunc`** | <code>(notification: <a href="#pushnotificationschema">PushNotificationSchema</a>) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+**Since:** 1.0.0
+
+--------------------
+
+
 ### removeAllListeners()
 
 ```typescript
@@ -561,3 +614,15 @@ The notification visibility. For more details, see the [Android Developer Docs](
 <code>'prompt' | 'prompt-with-rationale' | 'granted' | 'denied'</code>
 
 </docgen-api>
+
+
+#### Development
+
+## To be able to modify the web, you need to install the following package
+- `npm install -g rimraf`
+- `npm install -g docgen`
+- `npm install -g husky`
+- `apt install node-typescript`
+
+## Rebuild the web
+`npm run build`

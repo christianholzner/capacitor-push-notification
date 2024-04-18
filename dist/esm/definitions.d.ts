@@ -20,6 +20,10 @@ declare module '@capacitor/cli' {
              * @example ["badge", "sound", "alert"]
              */
             presentationOptions: PresentationOption[];
+            /**
+             *Server api url
+            **/
+            apiUrl?: string;
         };
     }
 }
@@ -138,6 +142,12 @@ export interface PushNotificationsPlugin {
      * @since 1.0.0
      */
     addListener(eventName: 'pushNotificationActionPerformed', listenerFunc: (notification: ActionPerformed) => void): Promise<PluginListenerHandle> & PluginListenerHandle;
+    /**
+     * Called when the device receives a background push notification.
+     *
+     * @since 1.0.0
+     */
+    addListener(eventName: 'silentNotificationReceived', listenerFunc: (notification: PushNotificationSchema) => void): Promise<PluginListenerHandle> & PluginListenerHandle;
     /**
      * Remove all native listeners for this plugin.
      *
