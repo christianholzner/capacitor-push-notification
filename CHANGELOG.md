@@ -3,7 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [5.0.8](https://github.com/CAUCA-9-1-1/capacitor-push-notification/compare/v5.0.8...v5.0.7) (2023-11-02)
+## [5.0.9](https://github.com/CAUCA-9-1-1/capacitor-push-notification/compare/v5.0.9...v5.0.8) (2024-04-23)
+
+
+### Features
+
+* Send background push only when the application is active
+
+
+
+
+
+## [5.0.8](https://github.com/CAUCA-9-1-1/capacitor-push-notification/compare/v5.0.8...v5.0.7) (2024-04-16)
 
 
 ### Features

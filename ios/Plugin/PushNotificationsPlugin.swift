@@ -173,8 +173,16 @@ public class PushNotificationsPlugin: CAPPlugin {
     }
 
     @objc public func onBackgroundNotification(notification: Notification) {
-        debugPrint(notification)
-        self.notifyListeners("silentNotificationReceived", data: notification.userInfo as? [String : Any] ?? ["something": "happened"], retainUntilConsumed: true)
+        let data = notification.userInfo as? [String : Any] ?? ["something": "happened"]
+        let event: [String: Any] = [
+            "data": data
+        ]
+        debugPrint(event)
+
+        let state = UIApplication.shared.applicationState
+        if state == .active {
+            self.notifyListeners("silentNotificationReceived", data: event, retainUntilConsumed: true);
+        }
     }
 
     @objc public func didRegisterForRemoteNotificationsWithDeviceToken(notification: NSNotification) {
