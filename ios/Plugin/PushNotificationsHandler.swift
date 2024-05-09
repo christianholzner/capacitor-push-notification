@@ -87,7 +87,6 @@ public class PushNotificationsHandler: NSObject, NotificationHandlerProtocol {
         data["notification"] = makeNotificationRequestJSObject(originalNotificationRequest)
 
         self.plugin?.notifyListeners("pushNotificationActionPerformed", data: data, retainUntilConsumed: true)
-
     }
 
     func makeNotificationRequestJSObject(_ request: UNNotificationRequest) -> JSObject {

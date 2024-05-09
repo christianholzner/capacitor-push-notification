@@ -50,7 +50,7 @@ public class NotificationAckPublisher {
             Log.e("NotificationAckPublisher", "postAcknowledge : " + ex.getMessage());
         }
         if (sent) {
-            Log.w("NotificationAckPublisher", "postNotification ack successfull");
+            Log.w("NotificationAckPublisher", "postNotification ack successful");
         } else {
             Log.w("NotificationAckPublisher", "postNotification not sent");
         }

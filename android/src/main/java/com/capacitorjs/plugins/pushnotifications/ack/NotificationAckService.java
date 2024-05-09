@@ -28,7 +28,7 @@ public class NotificationAckService {
                 ackStorage = new NotificationAckStorage(context.getContentResolver());
 
                 CapConfig capConfig = CapConfig.loadDefault(context.getApplicationContext());
-                apiUrl = capConfig.getString("plugins.PushNotifications.apiUrl", "localhost:5555");
+                apiUrl = capConfig.getString("plugins.PushNotifications.apiUrl", "http://localhost:5000/api/");
                 isInit = true;
             }
         } catch (Exception ex) {
