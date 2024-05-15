@@ -16,6 +16,7 @@ enum PushNotificationsPermissions: String {
 @objc(PushNotificationsPlugin)
 public class PushNotificationsPlugin: CAPPlugin {
     private let notificationDelegateHandler = PushNotificationsHandler()
+    private let notificationAckService = NotificationAckService()
     private var appDelegateRegistrationCalled: Bool = false
 
     override public func load() {
@@ -106,6 +107,7 @@ public class PushNotificationsPlugin: CAPPlugin {
             }
 
             call.resolve(["receive": result.rawValue])
+            self.notificationAckService.initContext(result == .granted ? true : false, apiAcknowledgeUrl: self.getConfig().getString("apiUrl"))
         }
     }
 
@@ -177,12 +179,14 @@ public class PushNotificationsPlugin: CAPPlugin {
         let event: [String: Any] = [
             "data": data
         ]
-        debugPrint(event)
 
         let state = UIApplication.shared.applicationState
         if state == .active {
             self.notifyListeners("silentNotificationReceived", data: event, retainUntilConsumed: true);
         }
+
+        self.notificationAckService.saveNotification(data)
+        self.notificationAckService.postNotificationAck(data)
     }
 
     @objc public func didRegisterForRemoteNotificationsWithDeviceToken(notification: NSNotification) {
