@@ -6,7 +6,7 @@ public class PushNotificationsHandler: NSObject, NotificationHandlerProtocol {
     var notificationRequestLookup = [String: JSObject]()
 
     public func requestPermissions(with completion: ((Bool, Error?) -> Void)? = nil) {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge, .criticalAlert]) { granted, error in
             completion?(granted, error)
         }
     }
@@ -42,7 +42,7 @@ public class PushNotificationsHandler: NSObject, NotificationHandlerProtocol {
                 case "sound":
                     presentationOptions.insert(.sound)
                 default:
-                    print("Unrecogizned presentation option: \(option)")
+                    print("Unrecognized presentation option: \(option)")
                 }
             }
 

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.20.0](https://github.com/CAUCA-9-1-1/capacitor-push-notification/compare/v6.20.0) (2024-06-20)
+
+### Features
+
+- Send ACK to remote server
+- Validate OS permission before Android 13
+- Ask iOS permission for "Critical Alert"
+
 ## [6.0.1](https://github.com/ionic-team/capacitor-plugins/compare/@capacitor/push-notifications@6.0.0...@capacitor/push-notifications@6.0.1) (2024-06-13)
 
 **Note:** Version bump only for package @capacitor/push-notifications
