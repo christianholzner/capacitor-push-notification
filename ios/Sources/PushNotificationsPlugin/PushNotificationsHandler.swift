@@ -6,22 +6,7 @@ public class PushNotificationsHandler: NSObject, NotificationHandlerProtocol {
     var notificationRequestLookup = [String: JSObject]()
 
     public func requestPermissions(with completion: ((Bool, Error?) -> Void)? = nil) {
-        var requestAuthorizationOptions: UNAuthorizationOptions = []
-        if #available(iOS 12.0, *) {
-            requestAuthorizationOptions = [.alert, .sound, .badge, .criticalAlert]
-        } else {
-            requestAuthorizationOptions = [.alert, .sound, .badge]
-        }
-
-        UNUserNotificationCenter.current().requestAuthorization(options: requestAuthorizationOptions) { (granted, error) in
-            if let error = error {
-                debugPrint(error)
-            }
-
-            UNUserNotificationCenter.current().getNotificationSettings { settings in
-                debugPrint(settings)
-            }
-
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             completion?(granted, error)
         }
     }
@@ -53,10 +38,11 @@ public class PushNotificationsHandler: NSObject, NotificationHandlerProtocol {
                     presentationOptions.insert(.alert)
                 case "badge":
                     presentationOptions.insert(.badge)
+
                 case "sound":
                     presentationOptions.insert(.sound)
                 default:
-                    print("Unrecognized presentation option: \(option)")
+                    print("Unrecogizned presentation option: \(option)")
                 }
             }
 
@@ -87,6 +73,7 @@ public class PushNotificationsHandler: NSObject, NotificationHandlerProtocol {
         data["notification"] = makeNotificationRequestJSObject(originalNotificationRequest)
 
         self.plugin?.notifyListeners("pushNotificationActionPerformed", data: data, retainUntilConsumed: true)
+
     }
 
     func makeNotificationRequestJSObject(_ request: UNNotificationRequest) -> JSObject {

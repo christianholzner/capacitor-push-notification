@@ -35,7 +35,7 @@ Android 13 requires a permission check in order to receive push notifications.  
 
 This plugin will use the following project variables (defined in your app's `variables.gradle` file):
 
-- `firebaseMessagingVersion` version of `com.google.firebase:firebase-messaging` (default: `23.1.2`)
+- `firebaseMessagingVersion` version of `com.google.firebase:firebase-messaging` (default: `23.3.1`)
 
 ---
 
@@ -51,6 +51,27 @@ If no icon is specified Android will use the application icon, but push icon sho
 
 Android Studio has an icon generator you can use to create your Push Notifications icon.
 
+## Push Notification channel
+
+From Android 8.0 (API level 26) and higher, notification channels are supported and recommended. The SDK will derive the `channelId` for incoming push notifications in the following order:
+
+1. **Firstly it will check if the incoming notification has a `channelId` set.**
+   When sending a push notification from either the FCM dashboard, or through their API, it's possible to specify a `channelId`.
+2. **Then it will check for a possible given value in the `AndroidManifest.xml`.**
+   If you prefer to create and use your own default channel, set `default_notification_channel_id` to the ID of your notification channel object as shown; FCM will use this value whenever incoming messages do not explicitly set a notification channel.
+
+```xml
+<meta-data
+    android:name="com.google.firebase.messaging.default_notification_channel_id"
+    android:value="@string/default_notification_channel_id" />
+```
+
+3. **Lastly it will use the fallback `channelId` that the Firebase SDK provides for us.**
+   FCM provides a default notification channel with basic settings out of the box. This channel will be created by the Firebase SDK upon receiving the first push message.
+
+> **Warning**
+> When using option 1 or 2, you are still required to create a notification channel in code with an ID that matches the one used the chosen option. You can use [`createChannel(...)`](#createchannel) for this. If you don't do this, the SDK will fallback to option 3.
+
 ## Push notifications appearance in foreground
 
 <docgen-config>
@@ -61,7 +82,6 @@ You can configure the way the push notifications are displayed when the app is i
 | Prop                      | Type                              | Description                                                                                                                                                                                                                                                                                                                                                                                          | Since |
 | ------------------------- | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
 | **`presentationOptions`** | <code>PresentationOption[]</code> | This is an array of strings you can combine. Possible values in the array are: - `badge`: badge count on the app icon is updated (default value) - `sound`: the device will ring/vibrate when the push notification is received - `alert`: the push notification is displayed in a native dialog An empty array can be provided if none of the options are desired. badge is only available for iOS. | 1.0.0 |
-| **`apiUrl`**              | <code>string</code>               | Server api url                                                                                                                                                                                                                                                                                                                                                                                       |       |
 
 ### Examples
 
@@ -71,8 +91,7 @@ In `capacitor.config.json`:
 {
   "plugins": {
     "PushNotifications": {
-      "presentationOptions": ["badge", "sound", "alert"],
-      "apiUrl": undefined
+      "presentationOptions": ["badge", "sound", "alert"]
     }
   }
 }
@@ -89,7 +108,6 @@ const config: CapacitorConfig = {
   plugins: {
     PushNotifications: {
       presentationOptions: ["badge", "sound", "alert"],
-      apiUrl: undefined,
     },
   },
 };
@@ -171,11 +189,10 @@ const getDeliveredNotifications = async () => {
 * [`listChannels()`](#listchannels)
 * [`checkPermissions()`](#checkpermissions)
 * [`requestPermissions()`](#requestpermissions)
-* [`addListener('registration', ...)`](#addlistenerregistration)
-* [`addListener('registrationError', ...)`](#addlistenerregistrationerror)
-* [`addListener('pushNotificationReceived', ...)`](#addlistenerpushnotificationreceived)
-* [`addListener('pushNotificationActionPerformed', ...)`](#addlistenerpushnotificationactionperformed)
-* [`addListener('silentNotificationReceived', ...)`](#addlistenersilentnotificationreceived)
+* [`addListener('registration', ...)`](#addlistenerregistration-)
+* [`addListener('registrationError', ...)`](#addlistenerregistrationerror-)
+* [`addListener('pushNotificationReceived', ...)`](#addlistenerpushnotificationreceived-)
+* [`addListener('pushNotificationActionPerformed', ...)`](#addlistenerpushnotificationactionperformed-)
 * [`removeAllListeners()`](#removealllisteners)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
@@ -362,7 +379,7 @@ the permission without prompting again.
 ### addListener('registration', ...)
 
 ```typescript
-addListener(eventName: 'registration', listenerFunc: (token: Token) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'registration', listenerFunc: (token: Token) => void) => Promise<PluginListenerHandle>
 ```
 
 Called when the push notification registration finishes without problems.
@@ -374,7 +391,7 @@ Provides the push notification token.
 | **`eventName`**    | <code>'registration'</code>                                 |
 | **`listenerFunc`** | <code>(token: <a href="#token">Token</a>) =&gt; void</code> |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 **Since:** 1.0.0
 
@@ -384,7 +401,7 @@ Provides the push notification token.
 ### addListener('registrationError', ...)
 
 ```typescript
-addListener(eventName: 'registrationError', listenerFunc: (error: RegistrationError) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'registrationError', listenerFunc: (error: RegistrationError) => void) => Promise<PluginListenerHandle>
 ```
 
 Called when the push notification registration finished with problems.
@@ -396,7 +413,7 @@ Provides an error with the registration problem.
 | **`eventName`**    | <code>'registrationError'</code>                                                    |
 | **`listenerFunc`** | <code>(error: <a href="#registrationerror">RegistrationError</a>) =&gt; void</code> |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 **Since:** 1.0.0
 
@@ -406,7 +423,7 @@ Provides an error with the registration problem.
 ### addListener('pushNotificationReceived', ...)
 
 ```typescript
-addListener(eventName: 'pushNotificationReceived', listenerFunc: (notification: PushNotificationSchema) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'pushNotificationReceived', listenerFunc: (notification: PushNotificationSchema) => void) => Promise<PluginListenerHandle>
 ```
 
 Called when the device receives a push notification.
@@ -416,7 +433,7 @@ Called when the device receives a push notification.
 | **`eventName`**    | <code>'pushNotificationReceived'</code>                                                              |
 | **`listenerFunc`** | <code>(notification: <a href="#pushnotificationschema">PushNotificationSchema</a>) =&gt; void</code> |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 **Since:** 1.0.0
 
@@ -426,7 +443,7 @@ Called when the device receives a push notification.
 ### addListener('pushNotificationActionPerformed', ...)
 
 ```typescript
-addListener(eventName: 'pushNotificationActionPerformed', listenerFunc: (notification: ActionPerformed) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'pushNotificationActionPerformed', listenerFunc: (notification: ActionPerformed) => void) => Promise<PluginListenerHandle>
 ```
 
 Called when an action is performed on a push notification.
@@ -436,27 +453,7 @@ Called when an action is performed on a push notification.
 | **`eventName`**    | <code>'pushNotificationActionPerformed'</code>                                         |
 | **`listenerFunc`** | <code>(notification: <a href="#actionperformed">ActionPerformed</a>) =&gt; void</code> |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
-
-**Since:** 1.0.0
-
---------------------
-
-
-### addListener('silentNotificationReceived', ...)
-
-```typescript
-addListener(eventName: 'silentNotificationReceived', listenerFunc: (notification: PushNotificationSchema) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
-```
-
-Called when the device receives a background push notification.
-
-| Param              | Type                                                                                                 |
-| ------------------ | ---------------------------------------------------------------------------------------------------- |
-| **`eventName`**    | <code>'silentNotificationReceived'</code>                                                            |
-| **`listenerFunc`** | <code>(notification: <a href="#pushnotificationschema">PushNotificationSchema</a>) =&gt; void</code> |
-
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 **Since:** 1.0.0
 
@@ -585,15 +582,3 @@ The notification visibility. For more details, see the [Android Developer Docs](
 <code>'prompt' | 'prompt-with-rationale' | 'granted' | 'denied'</code>
 
 </docgen-api>
-
-
-#### Development
-
-## To be able to modify the web, you need to install the following package
-- `npm install -g rimraf`
-- `npm install -g docgen`
-- `npm install -g husky`
-- `apt install node-typescript`
-
-## Rebuild the web
-`npm run build`

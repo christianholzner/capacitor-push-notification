@@ -5,11 +5,5 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <provider
-            android:name="com.capacitorjs.plugins.pushnotifications.ack.storage.NotificationContentProvider"
-            android:authorities="com.capacitorjs.plugins.pushnotifications"
-            android:enabled="true"
-            android:exported="false">
-        </provider>
     </application>
 </manifest>

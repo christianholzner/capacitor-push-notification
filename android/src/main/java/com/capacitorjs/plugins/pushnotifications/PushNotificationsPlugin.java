@@ -11,24 +11,21 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.service.notification.StatusBarNotification;
-
-import androidx.core.app.NotificationCompat;
-
 import com.getcapacitor.*;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.annotation.Permission;
 import com.getcapacitor.annotation.PermissionCallback;
+import com.google.firebase.messaging.CommonNotificationBuilder;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.NotificationParams;
 import com.google.firebase.messaging.RemoteMessage;
-
 import java.util.Arrays;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 @CapacitorPlugin(
-        name = "PushNotifications",
-        permissions = @Permission(strings = {Manifest.permission.POST_NOTIFICATIONS}, alias = PushNotificationsPlugin.PUSH_NOTIFICATIONS)
+    name = "PushNotifications",
+    permissions = @Permission(strings = { Manifest.permission.POST_NOTIFICATIONS }, alias = PushNotificationsPlugin.PUSH_NOTIFICATIONS)
 )
 public class PushNotificationsPlugin extends Plugin {
 
@@ -82,7 +79,9 @@ public class PushNotificationsPlugin extends Plugin {
     @PluginMethod
     public void checkPermissions(PluginCall call) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            AreEnabledNotificationsBeforeAndroid13(call);
+            JSObject permissionsResultJSON = new JSObject();
+            permissionsResultJSON.put("receive", "granted");
+            call.resolve(permissionsResultJSON);
         } else {
             super.checkPermissions(call);
         }
@@ -91,43 +90,29 @@ public class PushNotificationsPlugin extends Plugin {
     @PluginMethod
     public void requestPermissions(PluginCall call) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || getPermissionState(PUSH_NOTIFICATIONS) == PermissionState.GRANTED) {
-            AreEnabledNotificationsBeforeAndroid13(call);
+            JSObject permissionsResultJSON = new JSObject();
+            permissionsResultJSON.put("receive", "granted");
+            call.resolve(permissionsResultJSON);
         } else {
             requestPermissionForAlias(PUSH_NOTIFICATIONS, call, "permissionsCallback");
         }
-    }
-
-    private void AreEnabledNotificationsBeforeAndroid13(PluginCall call) {
-        JSObject permissionsResultJSON = new JSObject();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (!notificationManager.areNotificationsEnabled()) {
-                permissionsResultJSON.put("receive", "denied");
-            } else {
-                permissionsResultJSON.put("receive", "granted");
-            }
-        } else {
-            permissionsResultJSON.put("receive", "granted");
-        }
-
-        call.resolve(permissionsResultJSON);
     }
 
     @PluginMethod
     public void register(PluginCall call) {
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         FirebaseMessaging
-                .getInstance()
-                .getToken()
-                .addOnCompleteListener(
-                        task -> {
-                            if (!task.isSuccessful()) {
-                                sendError(task.getException().getLocalizedMessage());
-                                return;
-                            }
-                            sendToken(task.getResult());
-                        }
-                );
+            .getInstance()
+            .getToken()
+            .addOnCompleteListener(
+                task -> {
+                    if (!task.isSuccessful()) {
+                        sendError(task.getException().getLocalizedMessage());
+                        return;
+                    }
+                    sendToken(task.getResult());
+                }
+            );
         call.resolve();
     }
 
@@ -273,11 +258,11 @@ public class PushNotificationsPlugin extends Plugin {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         try {
                             ApplicationInfo applicationInfo = getContext()
-                                    .getPackageManager()
-                                    .getApplicationInfo(
-                                            getContext().getPackageName(),
-                                            PackageManager.ApplicationInfoFlags.of(PackageManager.GET_META_DATA)
-                                    );
+                                .getPackageManager()
+                                .getApplicationInfo(
+                                    getContext().getPackageName(),
+                                    PackageManager.ApplicationInfoFlags.of(PackageManager.GET_META_DATA)
+                                );
                             bundle = applicationInfo.metaData;
                         } catch (PackageManager.NameNotFoundException e) {
                             e.printStackTrace();
@@ -286,20 +271,25 @@ public class PushNotificationsPlugin extends Plugin {
                         bundle = getBundleLegacy();
                     }
 
-                    int pushIcon = android.R.drawable.ic_dialog_info;
+                    if (bundle != null) {
+                        NotificationParams params = new NotificationParams(remoteMessage.toIntent().getExtras());
 
-                    if (bundle != null && bundle.getInt("com.google.firebase.messaging.default_notification_icon") != 0) {
-                        pushIcon = bundle.getInt("com.google.firebase.messaging.default_notification_icon");
-                    }
-                    NotificationCompat.Builder builder = new NotificationCompat.Builder(
+                        String channelId = CommonNotificationBuilder.getOrCreateChannel(
                             getContext(),
-                            NotificationChannelManager.FOREGROUND_NOTIFICATION_CHANNEL_ID
-                    )
-                            .setSmallIcon(pushIcon)
-                            .setContentTitle(title)
-                            .setContentText(body)
-                            .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-                    notificationManager.notify(0, builder.build());
+                            params.getNotificationChannelId(),
+                            bundle
+                        );
+
+                        CommonNotificationBuilder.DisplayNotificationInfo notificationInfo = CommonNotificationBuilder.createNotificationInfo(
+                            getContext(),
+                            getContext(),
+                            params,
+                            channelId,
+                            bundle
+                        );
+
+                        notificationManager.notify(notificationInfo.tag, notificationInfo.id, notificationInfo.notificationBuilder.build());
+                    }
                 }
             }
             remoteMessageData.put("title", title);
@@ -335,8 +325,8 @@ public class PushNotificationsPlugin extends Plugin {
     private Bundle getBundleLegacy() {
         try {
             ApplicationInfo applicationInfo = getContext()
-                    .getPackageManager()
-                    .getApplicationInfo(getContext().getPackageName(), PackageManager.GET_META_DATA);
+                .getPackageManager()
+                .getApplicationInfo(getContext().getPackageName(), PackageManager.GET_META_DATA);
             return applicationInfo.metaData;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
