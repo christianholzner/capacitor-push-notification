@@ -6,7 +6,22 @@ public class PushNotificationsHandler: NSObject, NotificationHandlerProtocol {
     var notificationRequestLookup = [String: JSObject]()
 
     public func requestPermissions(with completion: ((Bool, Error?) -> Void)? = nil) {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge, .criticalAlert]) { granted, error in
+        var requestAuthorizationOptions: UNAuthorizationOptions = []
+        if #available(iOS 12.0, *) {
+            requestAuthorizationOptions = [.alert, .sound, .badge, .criticalAlert]
+        } else {
+            requestAuthorizationOptions = [.alert, .sound, .badge]
+        }
+
+        UNUserNotificationCenter.current().requestAuthorization(options: requestAuthorizationOptions) { granted, error in
+            if let error = error {
+                NSLog(error)
+            }
+
+            UNUserNotificationCenter.current().getNotificationSettings { settings in
+                NSLog(settings)
+            }
+
             completion?(granted, error)
         }
     }
@@ -38,9 +53,12 @@ public class PushNotificationsHandler: NSObject, NotificationHandlerProtocol {
                     presentationOptions.insert(.alert)
                 case "badge":
                     presentationOptions.insert(.badge)
-
                 case "sound":
                     presentationOptions.insert(.sound)
+                case "criticalAlert":
+                    if #available(iOS 12.0, *) {
+                        presentationOptions.insert(.criticalAlert)
+                    }
                 default:
                     print("Unrecognized presentation option: \(option)")
                 }

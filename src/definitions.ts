@@ -2,7 +2,7 @@
 
 import type { PermissionState, PluginListenerHandle } from '@capacitor/core';
 
-export type PresentationOption = 'badge' | 'sound' | 'alert';
+export type PresentationOption = 'badge' | 'sound' | 'alert' | 'criticalAlert';
 
 declare module '@capacitor/cli' {
   export interface PluginsConfig {
@@ -148,6 +148,16 @@ export interface PushNotificationsPlugin {
     eventName: 'registrationError',
     listenerFunc: (error: RegistrationError) => void,
   ): Promise<PluginListenerHandle>;
+
+  /**
+   * Called when the device receives a background push notification.
+   *
+   * @since 1.0.0
+   */
+    addListener(
+      eventName: 'silentNotificationReceived',
+      listenerFunc: (notification: PushNotificationSchema) => void,
+    ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   /**
    * Called when the device receives a push notification.

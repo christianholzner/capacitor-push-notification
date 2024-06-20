@@ -7,9 +7,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-- Send ACK to remote server
-- Validate OS permission before Android 13
 - Ask iOS permission for "Critical Alert"
+- Validate OS permission before Android 13
+- Send acknowledge to remote server from Android
+- Create notification when iOS app received background push notifications and app is inactive
 
 ## [6.0.1](https://github.com/ionic-team/capacitor-plugins/compare/@capacitor/push-notifications@6.0.0...@capacitor/push-notifications@6.0.1) (2024-06-13)
 
