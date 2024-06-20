@@ -13,13 +13,13 @@ public class PushNotificationsHandler: NSObject, NotificationHandlerProtocol {
             requestAuthorizationOptions = [.alert, .sound, .badge]
         }
 
-        UNUserNotificationCenter.current().requestAuthorization(options: requestAuthorizationOptions) { (granted, error) in
+        UNUserNotificationCenter.current().requestAuthorization(options: requestAuthorizationOptions) { granted, error in
             if let error = error {
-                debugPrint(error)
+                NSLog("An error occured \(error.localizedDescription)")
             }
 
             UNUserNotificationCenter.current().getNotificationSettings { settings in
-                debugPrint(settings)
+                NSLog("Current notification settings \(settings.debugDescription)")
             }
 
             completion?(granted, error)
@@ -87,6 +87,7 @@ public class PushNotificationsHandler: NSObject, NotificationHandlerProtocol {
         data["notification"] = makeNotificationRequestJSObject(originalNotificationRequest)
 
         self.plugin?.notifyListeners("pushNotificationActionPerformed", data: data, retainUntilConsumed: true)
+
     }
 
     func makeNotificationRequestJSObject(_ request: UNNotificationRequest) -> JSObject {

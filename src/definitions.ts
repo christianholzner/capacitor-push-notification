@@ -2,7 +2,7 @@
 
 import type { PermissionState, PluginListenerHandle } from '@capacitor/core';
 
-export type PresentationOption = 'badge' | 'sound' | 'alert';
+export type PresentationOption = 'badge' | 'sound' | 'alert' | 'criticalAlert';
 
 declare module '@capacitor/cli' {
   export interface PluginsConfig {
@@ -24,10 +24,6 @@ declare module '@capacitor/cli' {
        * @example ["badge", "sound", "alert"]
        */
       presentationOptions: PresentationOption[];
-      /**
-       *Server api url
-      **/
-      apiUrl?: string;
     };
   }
 }
@@ -139,7 +135,7 @@ export interface PushNotificationsPlugin {
   addListener(
     eventName: 'registration',
     listenerFunc: (token: Token) => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Called when the push notification registration finished with problems.
@@ -151,7 +147,17 @@ export interface PushNotificationsPlugin {
   addListener(
     eventName: 'registrationError',
     listenerFunc: (error: RegistrationError) => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
+
+  /**
+   * Called when the device receives a background push notification.
+   *
+   * @since 1.0.0
+   */
+    addListener(
+      eventName: 'silentNotificationReceived',
+      listenerFunc: (notification: PushNotificationSchema) => void,
+    ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   /**
    * Called when the device receives a push notification.
@@ -161,7 +167,7 @@ export interface PushNotificationsPlugin {
   addListener(
     eventName: 'pushNotificationReceived',
     listenerFunc: (notification: PushNotificationSchema) => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Called when an action is performed on a push notification.
@@ -171,17 +177,7 @@ export interface PushNotificationsPlugin {
   addListener(
     eventName: 'pushNotificationActionPerformed',
     listenerFunc: (notification: ActionPerformed) => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
-
-  /**
-   * Called when the device receives a background push notification.
-   *
-   * @since 1.0.0
-   */
-  addListener(
-    eventName: 'silentNotificationReceived',
-    listenerFunc: (notification: PushNotificationSchema) => void,
-  ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   /**
    * Remove all native listeners for this plugin.

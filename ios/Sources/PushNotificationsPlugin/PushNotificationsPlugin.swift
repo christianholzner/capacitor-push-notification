@@ -14,9 +14,23 @@ enum PushNotificationsPermissions: String {
 }
 
 @objc(PushNotificationsPlugin)
-public class PushNotificationsPlugin: CAPPlugin {
+public class PushNotificationsPlugin: CAPPlugin, CAPBridgedPlugin {
+    public let identifier = "PushNotificationsPlugin"
+    public let jsName = "PushNotifications"
+    public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "register", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "unregister", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "checkPermissions", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "requestPermissions", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "getDeliveredNotifications", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "removeAllDeliveredNotifications", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "removeDeliveredNotifications", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "createChannel", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "listChannels", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "deleteChannel", returnType: CAPPluginReturnPromise)
+    ]
     private let notificationDelegateHandler = PushNotificationsHandler()
-    private let notificationAckService = NotificationAckService()
+    private let acknowledgeService = AcknowledgeService()
     private var appDelegateRegistrationCalled: Bool = false
 
     override public func load() {
@@ -107,7 +121,7 @@ public class PushNotificationsPlugin: CAPPlugin {
             }
 
             call.resolve(["receive": result.rawValue])
-            self.notificationAckService.initContext(result == .granted ? true : false, apiAcknowledgeUrl: self.getConfig().getString("apiUrl"))
+            self.acknowledgeService.initContext(result == .granted ? true : false, apiAcknowledgeUrl: self.getConfig().getString("apiUrl"))
         }
     }
 
@@ -175,6 +189,7 @@ public class PushNotificationsPlugin: CAPPlugin {
     }
 
     @objc public func onBackgroundNotification(notification: Notification) {
+        NSLog("Receive background notification")
         let data = notification.userInfo as? [String : Any] ?? ["something": "happened"]
         let event: [String: Any] = [
             "data": data
@@ -185,8 +200,7 @@ public class PushNotificationsPlugin: CAPPlugin {
             self.notifyListeners("silentNotificationReceived", data: event, retainUntilConsumed: true);
         }
 
-        self.notificationAckService.saveNotification(data)
-        self.notificationAckService.postNotificationAck(data)
+        self.acknowledgeService.newNotification(data);
     }
 
     @objc public func didRegisterForRemoteNotificationsWithDeviceToken(notification: NSNotification) {

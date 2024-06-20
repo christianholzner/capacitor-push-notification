@@ -187,7 +187,7 @@
       },
       {
         "name": "addListener",
-        "signature": "(eventName: 'registration', listenerFunc: (token: Token) => void) => Promise<PluginListenerHandle> & PluginListenerHandle",
+        "signature": "(eventName: 'registration', listenerFunc: (token: Token) => void) => Promise<PluginListenerHandle>",
         "parameters": [
           {
             "name": "eventName",
@@ -200,7 +200,7 @@
             "type": "(token: Token) => void"
           }
         ],
-        "returns": "Promise<PluginListenerHandle> & PluginListenerHandle",
+        "returns": "Promise<PluginListenerHandle>",
         "tags": [
           {
             "name": "since",
@@ -212,11 +212,11 @@
           "PluginListenerHandle",
           "Token"
         ],
-        "slug": "addlistenerregistration"
+        "slug": "addlistenerregistration-"
       },
       {
         "name": "addListener",
-        "signature": "(eventName: 'registrationError', listenerFunc: (error: RegistrationError) => void) => Promise<PluginListenerHandle> & PluginListenerHandle",
+        "signature": "(eventName: 'registrationError', listenerFunc: (error: RegistrationError) => void) => Promise<PluginListenerHandle>",
         "parameters": [
           {
             "name": "eventName",
@@ -229,7 +229,7 @@
             "type": "(error: RegistrationError) => void"
           }
         ],
-        "returns": "Promise<PluginListenerHandle> & PluginListenerHandle",
+        "returns": "Promise<PluginListenerHandle>",
         "tags": [
           {
             "name": "since",
@@ -241,65 +241,7 @@
           "PluginListenerHandle",
           "RegistrationError"
         ],
-        "slug": "addlistenerregistrationerror"
-      },
-      {
-        "name": "addListener",
-        "signature": "(eventName: 'pushNotificationReceived', listenerFunc: (notification: PushNotificationSchema) => void) => Promise<PluginListenerHandle> & PluginListenerHandle",
-        "parameters": [
-          {
-            "name": "eventName",
-            "docs": "",
-            "type": "'pushNotificationReceived'"
-          },
-          {
-            "name": "listenerFunc",
-            "docs": "",
-            "type": "(notification: PushNotificationSchema) => void"
-          }
-        ],
-        "returns": "Promise<PluginListenerHandle> & PluginListenerHandle",
-        "tags": [
-          {
-            "name": "since",
-            "text": "1.0.0"
-          }
-        ],
-        "docs": "Called when the device receives a push notification.",
-        "complexTypes": [
-          "PluginListenerHandle",
-          "PushNotificationSchema"
-        ],
-        "slug": "addlistenerpushnotificationreceived"
-      },
-      {
-        "name": "addListener",
-        "signature": "(eventName: 'pushNotificationActionPerformed', listenerFunc: (notification: ActionPerformed) => void) => Promise<PluginListenerHandle> & PluginListenerHandle",
-        "parameters": [
-          {
-            "name": "eventName",
-            "docs": "",
-            "type": "'pushNotificationActionPerformed'"
-          },
-          {
-            "name": "listenerFunc",
-            "docs": "",
-            "type": "(notification: ActionPerformed) => void"
-          }
-        ],
-        "returns": "Promise<PluginListenerHandle> & PluginListenerHandle",
-        "tags": [
-          {
-            "name": "since",
-            "text": "1.0.0"
-          }
-        ],
-        "docs": "Called when an action is performed on a push notification.",
-        "complexTypes": [
-          "PluginListenerHandle",
-          "ActionPerformed"
-        ],
-        "slug": "addlistenerpushnotificationactionperformed"
+        "slug": "addlistenerregistrationerror-"
       },
       {
         "name": "addListener",
@@ -328,7 +270,65 @@
           "PluginListenerHandle",
           "PushNotificationSchema"
         ],
-        "slug": "addlistenersilentnotificationreceived"
+        "slug": "addlistenersilentnotificationreceived-"
+      },
+      {
+        "name": "addListener",
+        "signature": "(eventName: 'pushNotificationReceived', listenerFunc: (notification: PushNotificationSchema) => void) => Promise<PluginListenerHandle>",
+        "parameters": [
+          {
+            "name": "eventName",
+            "docs": "",
+            "type": "'pushNotificationReceived'"
+          },
+          {
+            "name": "listenerFunc",
+            "docs": "",
+            "type": "(notification: PushNotificationSchema) => void"
+          }
+        ],
+        "returns": "Promise<PluginListenerHandle>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "1.0.0"
+          }
+        ],
+        "docs": "Called when the device receives a push notification.",
+        "complexTypes": [
+          "PluginListenerHandle",
+          "PushNotificationSchema"
+        ],
+        "slug": "addlistenerpushnotificationreceived-"
+      },
+      {
+        "name": "addListener",
+        "signature": "(eventName: 'pushNotificationActionPerformed', listenerFunc: (notification: ActionPerformed) => void) => Promise<PluginListenerHandle>",
+        "parameters": [
+          {
+            "name": "eventName",
+            "docs": "",
+            "type": "'pushNotificationActionPerformed'"
+          },
+          {
+            "name": "listenerFunc",
+            "docs": "",
+            "type": "(notification: ActionPerformed) => void"
+          }
+        ],
+        "returns": "Promise<PluginListenerHandle>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "1.0.0"
+          }
+        ],
+        "docs": "Called when an action is performed on a push notification.",
+        "complexTypes": [
+          "PluginListenerHandle",
+          "ActionPerformed"
+        ],
+        "slug": "addlistenerpushnotificationactionperformed-"
       },
       {
         "name": "removeAllListeners",
@@ -904,13 +904,6 @@
             "PresentationOption"
           ],
           "type": "PresentationOption[]"
-        },
-        {
-          "name": "apiUrl",
-          "tags": [],
-          "docs": "Server api url",
-          "complexTypes": [],
-          "type": "string | undefined"
         }
       ],
       "docs": "You can configure the way the push notifications are displayed when the app is in foreground."

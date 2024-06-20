@@ -1,4 +1,4 @@
-public class NotificationAckService: NSObject {
+public class AcknowledgeService: NSObject {
     private var areNotificationsEnabled: Bool = false
     private var apiUrl: String = "http://localhost:5000/api/"
     private let acknowledgePath: String = "Intervention/Acknowledge"
@@ -8,13 +8,13 @@ public class NotificationAckService: NSObject {
         self.apiUrl = apiAcknowledgeUrl ?? self.apiUrl
     }
 
-    public func saveNotification(_ data: [String: Any]) {
-        // TO DO LATER
+    public func newNotification(_ data: [String: Any]) {
+        self.postNotificationAck(data);
     }
 
-    public func postNotificationAck(_ data: [String: Any]) {
+    func postNotificationAck(_ data: [String: Any]) {
         self.sendAcknowledge(data) { success in
-            debugPrint("Notification acknowledge completed with : \(success)")
+            NSLog("Notification acknowledge completed with : \(success)")
         }
     }
 
