@@ -15,11 +15,11 @@ public class PushNotificationsHandler: NSObject, NotificationHandlerProtocol {
 
         UNUserNotificationCenter.current().requestAuthorization(options: requestAuthorizationOptions) { granted, error in
             if let error = error {
-                NSLog(error)
+                NSLog("An error occured \(error.localizedDescription)")
             }
 
             UNUserNotificationCenter.current().getNotificationSettings { settings in
-                NSLog(settings)
+                NSLog("Current notification settings \(settings.debugDescription)")
             }
 
             completion?(granted, error)
@@ -55,10 +55,6 @@ public class PushNotificationsHandler: NSObject, NotificationHandlerProtocol {
                     presentationOptions.insert(.badge)
                 case "sound":
                     presentationOptions.insert(.sound)
-                case "criticalAlert":
-                    if #available(iOS 12.0, *) {
-                        presentationOptions.insert(.criticalAlert)
-                    }
                 default:
                     print("Unrecognized presentation option: \(option)")
                 }

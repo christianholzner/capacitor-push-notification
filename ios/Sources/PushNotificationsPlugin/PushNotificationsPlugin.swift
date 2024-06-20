@@ -30,6 +30,7 @@ public class PushNotificationsPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "deleteChannel", returnType: CAPPluginReturnPromise)
     ]
     private let notificationDelegateHandler = PushNotificationsHandler()
+    private let acknowledgeService = AcknowledgeService()
     private var appDelegateRegistrationCalled: Bool = false
 
     override public func load() {
@@ -120,6 +121,7 @@ public class PushNotificationsPlugin: CAPPlugin, CAPBridgedPlugin {
             }
 
             call.resolve(["receive": result.rawValue])
+            self.acknowledgeService.initContext(result == .granted ? true : false, apiAcknowledgeUrl: self.getConfig().getString("apiUrl"))
         }
     }
 
@@ -187,17 +189,18 @@ public class PushNotificationsPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     @objc public func onBackgroundNotification(notification: Notification) {
-        NSLog(notification)
+        NSLog("Receive background notification")
         let data = notification.userInfo as? [String : Any] ?? ["something": "happened"]
         let event: [String: Any] = [
             "data": data
         ]
-        NSLog(event)
 
         let state = UIApplication.shared.applicationState
         if state == .active {
             self.notifyListeners("silentNotificationReceived", data: event, retainUntilConsumed: true);
         }
+
+        self.acknowledgeService.newNotification(data);
     }
 
     @objc public func didRegisterForRemoteNotificationsWithDeviceToken(notification: NSNotification) {
