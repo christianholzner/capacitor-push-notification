@@ -1,31 +1,46 @@
 public class AcknowledgeService: NSObject {
     private var areNotificationsEnabled: Bool = false
     private var apiUrl: String = "http://localhost:5000/api/"
-    private let acknowledgePath: String = "Intervention/Acknowledge"
+    private var acknowledgePath: String = "Intervention/Acknowledge"
+    private var notificationStorage: NotificationStorage!
 
     public func initContext(_ enabled: Bool, apiAcknowledgeUrl: String? = "") {
         self.areNotificationsEnabled = enabled
         self.apiUrl = apiAcknowledgeUrl ?? self.apiUrl
-    }
 
-    public func newNotification(_ data: [String: Any]) {
-        self.postNotificationAck(data);
-    }
-
-    func postNotificationAck(_ data: [String: Any]) {
-        self.sendAcknowledge(data) { success in
-            NSLog("Notification acknowledge completed with : \(success)")
+        if #available(iOS 17, *) {
+            self.notificationStorage = NotificationStorageIos17()
+        } else {
+            self.notificationStorage = NotificationStorageIos13()
         }
     }
 
-    func sendAcknowledge(_ data: [String: Any], onSuccess: @escaping (_ success: Bool) -> Void) {
-        let body = self.makeAcknowledgeObject(data)
+    public func newNotification(_ data: [String: Any]) {
+        if (self.notificationStorage != nil) {
+            self.notificationStorage.save(log: self.generateNotificationLog(data))
+            self.postNotification();
+        }
+    }
+
+    func postNotification() {
+        let logs = self.notificationStorage.getNotificationLogItems()
+        for log in logs {
+            self.sendAcknowledge(log) { success in
+                NSLog("Notification acknowledge completed with : \(success)")
+                if success == true {
+                    self.notificationStorage.remove(log: log)
+                }
+            }
+        }
+    }
+
+    func sendAcknowledge(_ log: NotificationLogItem, onSuccess: @escaping (_ success: Bool) -> Void) {
         let url = URL(string: self.apiUrl + self.acknowledgePath)!
         var request = URLRequest(url: url)
 
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "POST"
-        request.httpBody = body
+        request.httpBody = log.toJson()
 
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if error != nil {
@@ -45,14 +60,15 @@ public class AcknowledgeService: NSObject {
         task.resume()
     }
 
-    func makeAcknowledgeObject(_ data: [String: Any]) -> Data? {
-        return try? JSONSerialization.data(withJSONObject: [
-            "deviceId": UIDevice.current.identifierForVendor!.uuidString,
-            "origin": "native ios " + UIDevice.current.systemVersion,
-            "interventionId": data["interventionId"] ?? "",
-            "notificationLogId": data["notificationLogId"] ?? "",
-            "areNotificationsEnabled": self.areNotificationsEnabled,
-            "applicationIsActive": UIApplication.shared.applicationState == .active ? true : false
-        ])
+    func generateNotificationLog(_ data: [String: Any]) -> NotificationLogItem {
+        return NotificationLogItem(
+            timeStamp: Int(NSDate().timeIntervalSince1970) * 1000,
+            deviceId: UIDevice.current.identifierForVendor!.uuidString,
+            notificationLogId: data["notificationLogId"] as! String,
+            interventionId: data["interventionId"] as! String,
+            origin: "native ios " + UIDevice.current.systemVersion,
+            areNotificationsEnabled: self.areNotificationsEnabled,
+            applicationIsActive: UIApplication.shared.applicationState == .active ? true : false
+        )
     }
 }

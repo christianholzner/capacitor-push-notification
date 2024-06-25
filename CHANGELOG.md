@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+
+## [6.21.0](https://github.com/CAUCA-9-1-1/capacitor-push-notification/compare/v6.20.0...v6.21.0) (2024-06-20)
+
+### Features
+
+- Save acknowledge notification on IOS to send it later if needed
+
 ## [6.20.0](https://github.com/CAUCA-9-1-1/capacitor-push-notification/compare/v6.20.0) (2024-06-20)
 
 ### Features

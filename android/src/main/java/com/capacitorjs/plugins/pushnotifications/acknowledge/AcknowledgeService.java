@@ -13,7 +13,7 @@ import com.getcapacitor.CapConfig;
 import java.util.List;
 
 public class AcknowledgeService {
-    private static int MAX_LOGS_IN_STORAGE = 10;
+    private static int MAX_LOGS_IN_STORAGE = 20;
     private static int MAX_ALLOWED_TIME_MS_POST_ACK = 3000;
     private NotificationStorage ackStorage;
     private String apiUrl;
