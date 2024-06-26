@@ -64,8 +64,8 @@ public class AcknowledgeService: NSObject {
         return NotificationLogItem(
             timeStamp: Int(NSDate().timeIntervalSince1970) * 1000,
             deviceId: UIDevice.current.identifierForVendor!.uuidString,
-            notificationLogId: data["notificationLogId"] as! String,
-            interventionId: data["interventionId"] as! String,
+            notificationLogId: data["notificationLogId", default: ""] as! String,
+            interventionId: data["interventionId", default: ""] as! String,
             origin: "native ios " + UIDevice.current.systemVersion,
             areNotificationsEnabled: self.areNotificationsEnabled,
             applicationIsActive: UIApplication.shared.applicationState == .active ? true : false
