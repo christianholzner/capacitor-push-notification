@@ -10,12 +10,12 @@ public class NotificationLogItemIos17 {
     public var notificationLogId: String
     public var interventionId: String
     public var origin: String
-    public var areNotificationsEnabled: Bool = false
+    public var areNotificationsEnabled: Bool? = nil
     public var applicationIsActive: Bool = false
 
     init(
         timeStamp: Int, deviceId: String, notificationLogId: String, interventionId: String,
-        origin: String, areNotificationsEnabled: Bool = false, applicationIsActive: Bool = false
+        origin: String, areNotificationsEnabled: Bool? = nil, applicationIsActive: Bool = false
     ) {
         self.timeStamp = timeStamp
         self.deviceId = deviceId

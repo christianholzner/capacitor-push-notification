@@ -6,11 +6,11 @@ public class NotificationLogItem {
     public var notificationLogId: String
     public var interventionId: String
     public var origin: String
-    public var areNotificationsEnabled: Bool = false
+    public var areNotificationsEnabled: Bool? = nil
     public var applicationIsActive: Bool = false
 
     public init (timeStamp: Int, deviceId: String, notificationLogId: String, interventionId: String,
-                origin: String, areNotificationsEnabled: Bool = false, applicationIsActive: Bool = false) {
+                origin: String, areNotificationsEnabled: Bool? = nil, applicationIsActive: Bool = false) {
         self.timeStamp = timeStamp
         self.deviceId = deviceId
         self.notificationLogId = notificationLogId
@@ -21,14 +21,19 @@ public class NotificationLogItem {
     }
 
     public func toJson() -> Data? {
-        return try? JSONSerialization.data(withJSONObject: [
+        var log = [
             "timeStamp": String(self.timeStamp),
             "deviceId": self.deviceId,
             "notificationLogId": self.notificationLogId,
             "interventionId": self.interventionId,
             "origin": self.origin,
-            "areNotificationsEnabled": String(self.areNotificationsEnabled),
             "applicationIsActive": String(self.applicationIsActive)
-        ])
+        ]
+
+        if (self.areNotificationsEnabled != nil) {
+            log["areNotificationsEnabled"] = String(self.areNotificationsEnabled!)
+        }
+
+        return try? JSONSerialization.data(withJSONObject: log)
     }
 }

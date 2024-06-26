@@ -36,6 +36,7 @@ public class PushNotificationsPlugin: CAPPlugin, CAPBridgedPlugin {
     override public func load() {
         self.bridge?.notificationRouter.pushNotificationHandler = self.notificationDelegateHandler
         self.notificationDelegateHandler.plugin = self
+        self.acknowledgeService.setContext(self.getConfig().getString("apiUrl"))
 
         NotificationCenter.default.addObserver(self,
                                             selector: #selector(self.onBackgroundNotification(notification:)),
@@ -121,7 +122,7 @@ public class PushNotificationsPlugin: CAPPlugin, CAPBridgedPlugin {
             }
 
             call.resolve(["receive": result.rawValue])
-            self.acknowledgeService.initContext(result == .granted ? true : false, apiAcknowledgeUrl: self.getConfig().getString("apiUrl"))
+            self.acknowledgeService.setNotificationsEnabled(result == .granted ? true : false)
         }
     }
 

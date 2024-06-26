@@ -1,11 +1,11 @@
 public class AcknowledgeService: NSObject {
-    private var areNotificationsEnabled: Bool = false
+    private var isNotificationsEnabled: Bool? = nil
     private var apiUrl: String = "http://localhost:5000/api/"
     private var acknowledgePath: String = "Intervention/Acknowledge"
     private var notificationStorage: NotificationStorage!
+    private var preloadingNotifications: [[String: Any]] = []
 
-    public func initContext(_ enabled: Bool, apiAcknowledgeUrl: String? = "") {
-        self.areNotificationsEnabled = enabled
+    public func setContext(_ apiAcknowledgeUrl: String? = "") {
         self.apiUrl = apiAcknowledgeUrl ?? self.apiUrl
 
         if #available(iOS 17, *) {
@@ -15,11 +15,26 @@ public class AcknowledgeService: NSObject {
         }
     }
 
+    public func setNotificationsEnabled(_ enabled: Bool) {
+        self.isNotificationsEnabled = enabled
+    }
+
     public func newNotification(_ data: [String: Any]) {
         if (self.notificationStorage != nil) {
+            self.savePreloadingNotifications()
             self.notificationStorage.save(log: self.generateNotificationLog(data))
             self.postNotification();
+        } else {
+            self.preloadingNotifications.append(data)
         }
+    }
+
+    func savePreloadingNotifications() {
+        for notification in self.preloadingNotifications {
+            self.notificationStorage.save(log: self.generateNotificationLog(notification))
+        }
+
+        self.preloadingNotifications = []
     }
 
     func postNotification() {
@@ -67,7 +82,7 @@ public class AcknowledgeService: NSObject {
             notificationLogId: data["notificationLogId", default: ""] as! String,
             interventionId: data["interventionId", default: ""] as! String,
             origin: "native ios " + UIDevice.current.systemVersion,
-            areNotificationsEnabled: self.areNotificationsEnabled,
+            areNotificationsEnabled: self.isNotificationsEnabled,
             applicationIsActive: UIApplication.shared.applicationState == .active ? true : false
         )
     }
