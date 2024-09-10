@@ -77,7 +77,7 @@ public class AcknowledgeService: NSObject {
 
     func generateNotificationLog(_ data: [String: Any]) -> NotificationLogItem {
         return NotificationLogItem(
-            timeStamp: DispatchTime.now().uptimeNanoseconds / 1_000_000
+            timeStamp: (Int(NSDate().timeIntervalSince1970) * 1000) + 999,
             deviceId: UIDevice.current.identifierForVendor!.uuidString,
             notificationLogId: data["notificationLogId", default: ""] as! String,
             interventionId: data["interventionId", default: ""] as! String,
