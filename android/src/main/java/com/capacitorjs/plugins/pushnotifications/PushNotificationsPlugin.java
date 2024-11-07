@@ -1,15 +1,18 @@
 package com.capacitorjs.plugins.pushnotifications;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import androidx.core.app.ActivityCompat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 import com.getcapacitor.*;
 import com.getcapacitor.annotation.CapacitorPlugin;
@@ -93,6 +96,87 @@ public class PushNotificationsPlugin extends Plugin {
             requestPermissionForAlias(PUSH_NOTIFICATIONS, call, "permissionsCallback");
         }
     }
+
+  @PluginMethod()
+  public void openDndMenu(PluginCall call) {
+    Activity myActivity = getActivity();
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+      myActivity.startActivityForResult(intent, 0);
+    }
+
+    JSObject ret = new JSObject();
+    ret.put("value", "true");
+    call.resolve(ret);
+  }
+
+  @PluginMethod()
+  public void checkPermissionsDND(PluginCall call) {
+    Activity myActivity = getActivity();
+
+    JSObject ret = new JSObject();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      NotificationManager n = (NotificationManager) myActivity.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+      if(n.isNotificationPolicyAccessGranted()) {
+        ret.put("value", "true");
+      } else {
+        ret.put("value", "false");
+      }
+    } else {
+      ret.put("value", "true");
+    }
+    call.resolve(ret);
+  }
+
+  private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 100;
+  @PluginMethod
+  public void requestPermissionsDND2(PluginCall call) {
+      Context context = getContext();
+      
+      // Check and request POST_NOTIFICATIONS permission (Android 13+)
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+          if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS)
+              != PackageManager.PERMISSION_GRANTED) {
+              ActivityCompat.requestPermissions(getActivity(),
+                      new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 
+                      NOTIFICATION_PERMISSION_REQUEST_CODE);
+          }
+      }
+
+      // Check and request Do Not Disturb access permission
+      NotificationManager notificationManager = 
+              (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+      
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && 
+          !notificationManager.isNotificationPolicyAccessGranted()) {
+          
+          Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+          getActivity().startActivity(intent);
+      }
+
+      call.resolve();
+  }
+
+  @PluginMethod()
+  public void requestPermissionsDND(PluginCall call) {
+    Activity myActivity = getActivity();
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      NotificationManager n = (NotificationManager) myActivity.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+      if(n.isNotificationPolicyAccessGranted()) {
+        // AudioManager audioManager = (AudioManager) myActivity.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+        // audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+      }else{
+        // Ask the user to grant access
+        Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+        myActivity.startActivityForResult(intent, 0);
+      }
+    }
+    JSObject ret = new JSObject();
+    ret.put("value", "true");
+    call.resolve(ret);
+  }
 
     private void areEnabledNotificationsBeforeAndroid13(PluginCall call) {
         JSObject permissionsResultJSON = new JSObject();
@@ -291,6 +375,7 @@ public class PushNotificationsPlugin extends Plugin {
                             params.getNotificationChannelId(),
                             bundle
                         );
+                        remoteMessageData.put("channelId", channelId);
 
                         CommonNotificationBuilder.DisplayNotificationInfo notificationInfo = CommonNotificationBuilder.createNotificationInfo(
                             getContext(),

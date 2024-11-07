@@ -16,7 +16,7 @@
             "text": "1.0.0"
           }
         ],
-        "docs": "Register the app to receive push notifications.\n\nThis method will trigger the `'registration'` event with the push token or\n`'registrationError'` if there was a problem. It does not prompt the user for\nnotification permissions, use `requestPermissions()` first.",
+        "docs": "Register the app to receive push notifications.\r\n\r\nThis method will trigger the `'registration'` event with the push token or\r\n`'registrationError'` if there was a problem. It does not prompt the user for\r\nnotification permissions, use `requestPermissions()` first.",
         "complexTypes": [],
         "slug": "register"
       },
@@ -31,7 +31,7 @@
             "text": "5.0.0"
           }
         ],
-        "docs": "Unregister the app from push notifications.\n\nThis will delete a firebase token on Android, and unregister APNS on iOS.",
+        "docs": "Unregister the app from push notifications.\r\n\r\nThis will delete a firebase token on Android, and unregister APNS on iOS.",
         "complexTypes": [],
         "slug": "unregister"
       },
@@ -107,7 +107,7 @@
             "text": "1.0.0"
           }
         ],
-        "docs": "Create a notification channel.\n\nOnly available on Android O or newer (SDK 26+).",
+        "docs": "Create a notification channel.\r\n\r\nOnly available on Android O or newer (SDK 26+).",
         "complexTypes": [
           "Channel"
         ],
@@ -130,7 +130,7 @@
             "text": "1.0.0"
           }
         ],
-        "docs": "Delete a notification channel.\n\nOnly available on Android O or newer (SDK 26+).",
+        "docs": "Delete a notification channel.\r\n\r\nOnly available on Android O or newer (SDK 26+).",
         "complexTypes": [],
         "slug": "deletechannel"
       },
@@ -145,7 +145,7 @@
             "text": "1.0.0"
           }
         ],
-        "docs": "List the available notification channels.\n\nOnly available on Android O or newer (SDK 26+).",
+        "docs": "List the available notification channels.\r\n\r\nOnly available on Android O or newer (SDK 26+).",
         "complexTypes": [
           "ListChannelsResult"
         ],
@@ -162,7 +162,7 @@
             "text": "1.0.0"
           }
         ],
-        "docs": "Check permission to receive push notifications.\n\nOn Android 12 and below the status is always granted because you can always\nreceive push notifications. If you need to check if the user allows\nto display notifications, use local-notifications plugin.",
+        "docs": "Check permission to receive push notifications.\r\n\r\nOn Android 12 and below the status is always granted because you can always\r\nreceive push notifications. If you need to check if the user allows\r\nto display notifications, use local-notifications plugin.",
         "complexTypes": [
           "PermissionStatus"
         ],
@@ -179,11 +179,79 @@
             "text": "1.0.0"
           }
         ],
-        "docs": "Request permission to receive push notifications.\n\nOn Android 12 and below it doesn't prompt for permission because you can always\nreceive push notifications.\n\nOn iOS, the first time you use the function, it will prompt the user\nfor push notification permission and return granted or denied based\non the user selection. On following calls it will get the current status of\nthe permission without prompting again.",
+        "docs": "Request permission to receive push notifications.\r\n\r\nOn Android 12 and below it doesn't prompt for permission because you can always\r\nreceive push notifications.\r\n\r\nOn iOS, the first time you use the function, it will prompt the user\r\nfor push notification permission and return granted or denied based\r\non the user selection. On following calls it will get the current status of\r\nthe permission without prompting again.",
         "complexTypes": [
           "PermissionStatus"
         ],
         "slug": "requestpermissions"
+      },
+      {
+        "name": "openDndMenu",
+        "signature": "() => Promise<PermissionStatus>",
+        "parameters": [],
+        "returns": "Promise<PermissionStatus>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "1.0.0"
+          }
+        ],
+        "docs": "openDndMenu.",
+        "complexTypes": [
+          "PermissionStatus"
+        ],
+        "slug": "opendndmenu"
+      },
+      {
+        "name": "checkPermissionsDND",
+        "signature": "() => Promise<PermissionStatus>",
+        "parameters": [],
+        "returns": "Promise<PermissionStatus>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "1.0.0"
+          }
+        ],
+        "docs": "checkPermissionsDND.",
+        "complexTypes": [
+          "PermissionStatus"
+        ],
+        "slug": "checkpermissionsdnd"
+      },
+      {
+        "name": "requestPermissionsDND",
+        "signature": "() => Promise<PermissionStatus>",
+        "parameters": [],
+        "returns": "Promise<PermissionStatus>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "1.0.0"
+          }
+        ],
+        "docs": "requestPermissionsDND.",
+        "complexTypes": [
+          "PermissionStatus"
+        ],
+        "slug": "requestpermissionsdnd"
+      },
+      {
+        "name": "requestPermissionsDND2",
+        "signature": "() => Promise<PermissionStatus>",
+        "parameters": [],
+        "returns": "Promise<PermissionStatus>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "1.0.0"
+          }
+        ],
+        "docs": "requestPermissionsDND2.",
+        "complexTypes": [
+          "PermissionStatus"
+        ],
+        "slug": "requestpermissionsdnd2"
       },
       {
         "name": "addListener",
@@ -207,7 +275,7 @@
             "text": "1.0.0"
           }
         ],
-        "docs": "Called when the push notification registration finishes without problems.\n\nProvides the push notification token.",
+        "docs": "Called when the push notification registration finishes without problems.\r\n\r\nProvides the push notification token.",
         "complexTypes": [
           "PluginListenerHandle",
           "Token"
@@ -236,7 +304,7 @@
             "text": "1.0.0"
           }
         ],
-        "docs": "Called when the push notification registration finished with problems.\n\nProvides an error with the registration problem.",
+        "docs": "Called when the push notification registration finished with problems.\r\n\r\nProvides an error with the registration problem.",
         "complexTypes": [
           "PluginListenerHandle",
           "RegistrationError"
@@ -364,7 +432,7 @@
               "name": "since"
             }
           ],
-          "docs": "List of notifications that are visible on the\nnotifications screen.",
+          "docs": "List of notifications that are visible on the\r\nnotifications screen.",
           "complexTypes": [
             "PushNotificationSchema"
           ],
@@ -435,7 +503,7 @@
               "name": "since"
             }
           ],
-          "docs": "The notification tag.\n\nOnly available on Android (from push notifications).",
+          "docs": "The notification tag.\r\n\r\nOnly available on Android (from push notifications).",
           "complexTypes": [],
           "type": "string | undefined"
         },
@@ -475,7 +543,7 @@
               "name": "since"
             }
           ],
-          "docs": "Any additional data that was included in the\npush notification payload.",
+          "docs": "Any additional data that was included in the\r\npush notification payload.",
           "complexTypes": [],
           "type": "any"
         },
@@ -487,7 +555,7 @@
               "name": "since"
             }
           ],
-          "docs": "The action to be performed on the user opening the notification.\n\nOnly available on Android.",
+          "docs": "The action to be performed on the user opening the notification.\r\n\r\nOnly available on Android.",
           "complexTypes": [],
           "type": "string | undefined"
         },
@@ -499,7 +567,7 @@
               "name": "since"
             }
           ],
-          "docs": "Deep link from the notification.\n\nOnly available on Android.",
+          "docs": "Deep link from the notification.\r\n\r\nOnly available on Android.",
           "complexTypes": [],
           "type": "string | undefined"
         },
@@ -511,7 +579,7 @@
               "name": "since"
             }
           ],
-          "docs": "Set the group identifier for notification grouping.\n\nOnly available on Android. Works like `threadIdentifier` on iOS.",
+          "docs": "Set the group identifier for notification grouping.\r\n\r\nOnly available on Android. Works like `threadIdentifier` on iOS.",
           "complexTypes": [],
           "type": "string | undefined"
         },
@@ -523,7 +591,7 @@
               "name": "since"
             }
           ],
-          "docs": "Designate this notification as the summary for an associated `group`.\n\nOnly available on Android.",
+          "docs": "Designate this notification as the summary for an associated `group`.\r\n\r\nOnly available on Android.",
           "complexTypes": [],
           "type": "boolean | undefined"
         }
@@ -584,7 +652,7 @@
               "name": "example"
             }
           ],
-          "docs": "The sound that should be played for notifications posted to this channel.\n\nNotification channels with an importance of at least `3` should have a\nsound.\n\nThe file name of a sound file should be specified relative to the android\napp `res/raw` directory.",
+          "docs": "The sound that should be played for notifications posted to this channel.\r\n\r\nNotification channels with an importance of at least `3` should have a\r\nsound.\r\n\r\nThe file name of a sound file should be specified relative to the android\r\napp `res/raw` directory.",
           "complexTypes": [],
           "type": "string | undefined"
         },
@@ -614,7 +682,7 @@
               "name": "since"
             }
           ],
-          "docs": "The visibility of notifications posted to this channel.\n\nThis setting is for whether notifications posted to this channel appear on\nthe lockscreen or not, and if so, whether they appear in a redacted form.",
+          "docs": "The visibility of notifications posted to this channel.\r\n\r\nThis setting is for whether notifications posted to this channel appear on\r\nthe lockscreen or not, and if so, whether they appear in a redacted form.",
           "complexTypes": [
             "Visibility"
           ],
@@ -628,7 +696,7 @@
               "name": "since"
             }
           ],
-          "docs": "Whether notifications posted to this channel should display notification\nlights, on devices that support it.",
+          "docs": "Whether notifications posted to this channel should display notification\r\nlights, on devices that support it.",
           "complexTypes": [],
           "type": "boolean | undefined"
         },
@@ -640,7 +708,7 @@
               "name": "since"
             }
           ],
-          "docs": "The light color for notifications posted to this channel.\n\nOnly supported if lights are enabled on this channel and the device\nsupports it.\n\nSupported color formats are `#RRGGBB` and `#RRGGBBAA`.",
+          "docs": "The light color for notifications posted to this channel.\r\n\r\nOnly supported if lights are enabled on this channel and the device\r\nsupports it.\r\n\r\nSupported color formats are `#RRGGBB` and `#RRGGBBAA`.",
           "complexTypes": [],
           "type": "string | undefined"
         },
@@ -735,7 +803,7 @@
               "name": "since"
             }
           ],
-          "docs": "On iOS it contains the APNS token.\nOn Android it contains the FCM token.",
+          "docs": "On iOS it contains the APNS token.\r\nOn Android it contains the FCM token.",
           "complexTypes": [],
           "type": "string"
         }
@@ -789,7 +857,7 @@
               "name": "since"
             }
           ],
-          "docs": "Text entered on the notification action.\n\nOnly available on iOS.",
+          "docs": "Text entered on the notification action.\r\n\r\nOnly available on iOS.",
           "complexTypes": [],
           "type": "string | undefined"
         },
@@ -899,7 +967,7 @@
               "name": "example"
             }
           ],
-          "docs": "This is an array of strings you can combine. Possible values in the array are:\n  - `badge`: badge count on the app icon is updated (default value)\n  - `sound`: the device will ring/vibrate when the push notification is received\n  - `alert`: the push notification is displayed in a native dialog\n\nAn empty array can be provided if none of the options are desired.\n\nbadge is only available for iOS.",
+          "docs": "This is an array of strings you can combine. Possible values in the array are:\r\n  - `badge`: badge count on the app icon is updated (default value)\r\n  - `sound`: the device will ring/vibrate when the push notification is received\r\n  - `alert`: the push notification is displayed in a native dialog\r\n\r\nAn empty array can be provided if none of the options are desired.\r\n\r\nbadge is only available for iOS.",
           "complexTypes": [
             "PresentationOption"
           ],

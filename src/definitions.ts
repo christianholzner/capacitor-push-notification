@@ -126,6 +126,41 @@ export interface PushNotificationsPlugin {
   requestPermissions(): Promise<PermissionStatus>;
 
   /**
+   * openDndMenu.
+   *
+   * @since 1.0.0
+   */
+  openDndMenu(): Promise<PermissionStatus>;
+  /**
+   * checkPermissionsDND.
+   *
+   * @since 1.0.0
+   */
+
+  checkPermissionsDND(): Promise<PermissionStatus>;
+  /**
+   * requestPermissionsDND.
+   *
+   * @since 1.0.0
+   */
+
+  requestPermissionsDND(): Promise<PermissionStatus>;
+  /**
+   * requestPermissionsDND2.
+   *
+   * @since 1.0.0
+   */
+  
+  requestPermissionsDND2(): Promise<PermissionStatus>;
+  /**
+   * Called when the push notification registration finishes without problems.
+   *
+   * Provides the push notification token.
+   *
+   * @since 1.0.0
+   */
+  
+  /**
    * Called when the push notification registration finishes without problems.
    *
    * Provides the push notification token.

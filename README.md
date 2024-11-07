@@ -189,6 +189,10 @@ const getDeliveredNotifications = async () => {
 * [`listChannels()`](#listchannels)
 * [`checkPermissions()`](#checkpermissions)
 * [`requestPermissions()`](#requestpermissions)
+* [`openDndMenu()`](#opendndmenu)
+* [`checkPermissionsDND()`](#checkpermissionsdnd)
+* [`requestPermissionsDND()`](#requestpermissionsdnd)
+* [`requestPermissionsDND2()`](#requestpermissionsdnd2)
 * [`addListener('registration', ...)`](#addlistenerregistration-)
 * [`addListener('registrationError', ...)`](#addlistenerregistrationerror-)
 * [`addListener('silentNotificationReceived', ...)`](#addlistenersilentnotificationreceived-)
@@ -369,6 +373,66 @@ On iOS, the first time you use the function, it will prompt the user
 for push notification permission and return granted or denied based
 on the user selection. On following calls it will get the current status of
 the permission without prompting again.
+
+**Returns:** <code>Promise&lt;<a href="#permissionstatus">PermissionStatus</a>&gt;</code>
+
+**Since:** 1.0.0
+
+--------------------
+
+
+### openDndMenu()
+
+```typescript
+openDndMenu() => Promise<PermissionStatus>
+```
+
+openDndMenu.
+
+**Returns:** <code>Promise&lt;<a href="#permissionstatus">PermissionStatus</a>&gt;</code>
+
+**Since:** 1.0.0
+
+--------------------
+
+
+### checkPermissionsDND()
+
+```typescript
+checkPermissionsDND() => Promise<PermissionStatus>
+```
+
+checkPermissionsDND.
+
+**Returns:** <code>Promise&lt;<a href="#permissionstatus">PermissionStatus</a>&gt;</code>
+
+**Since:** 1.0.0
+
+--------------------
+
+
+### requestPermissionsDND()
+
+```typescript
+requestPermissionsDND() => Promise<PermissionStatus>
+```
+
+requestPermissionsDND.
+
+**Returns:** <code>Promise&lt;<a href="#permissionstatus">PermissionStatus</a>&gt;</code>
+
+**Since:** 1.0.0
+
+--------------------
+
+
+### requestPermissionsDND2()
+
+```typescript
+requestPermissionsDND2() => Promise<PermissionStatus>
+```
+
+requestPermissionsDND2.
 
 **Returns:** <code>Promise&lt;<a href="#permissionstatus">PermissionStatus</a>&gt;</code>
 

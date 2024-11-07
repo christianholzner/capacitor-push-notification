@@ -28,6 +28,7 @@ public class NotificationChannelManager {
 
     private static String CHANNEL_ID = "id";
     private static String CHANNEL_NAME = "name";
+    private static String CHANNEL_CANBYPASSDND = "canBypassDnd";
     private static String CHANNEL_DESCRIPTION = "description";
     private static String CHANNEL_IMPORTANCE = "importance";
     private static String CHANNEL_VISIBILITY = "visibility";
@@ -73,6 +74,7 @@ public class NotificationChannelManager {
                 channel.getString(CHANNEL_NAME),
                 channel.getInteger(CHANNEL_IMPORTANCE)
             );
+            notificationChannel.setBypassDnd(true);
             notificationChannel.setDescription(channel.getString(CHANNEL_DESCRIPTION));
             notificationChannel.setLockscreenVisibility(channel.getInteger(CHANNEL_VISIBILITY));
             notificationChannel.enableVibration(channel.getBool(CHANNEL_VIBRATE));
@@ -119,6 +121,7 @@ public class NotificationChannelManager {
                 JSObject channel = new JSObject();
                 channel.put(CHANNEL_ID, notificationChannel.getId());
                 channel.put(CHANNEL_NAME, notificationChannel.getName());
+                channel.put(CHANNEL_CANBYPASSDND, notificationChannel.canBypassDnd());
                 channel.put(CHANNEL_DESCRIPTION, notificationChannel.getDescription());
                 channel.put(CHANNEL_IMPORTANCE, notificationChannel.getImportance());
                 channel.put(CHANNEL_VISIBILITY, notificationChannel.getLockscreenVisibility());
