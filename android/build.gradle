@@ -31,7 +31,7 @@ if (System.getenv("CAP_PLUGIN_PUBLISH") == "true") {
 }
 
 android {
-    namespace "it.tuga.plugins.pushnotifications"
+    namespace "com.capacitorjs.plugins.pushnotifications"
     compileSdk project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 34
     defaultConfig {
         minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 22
