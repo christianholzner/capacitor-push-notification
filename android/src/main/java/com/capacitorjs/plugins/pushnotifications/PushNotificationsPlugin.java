@@ -73,6 +73,9 @@ public class PushNotificationsPlugin extends Plugin {
                     Log.i("handleOnNewIntent", key);
                     String valueStr = bundle.getString(key);
                     dataObject.put(key, valueStr);
+                  } 
+                  catch (Exception ex) {
+                      Log.e("AcknowledgeService", "ackNotification exception : " + ex.getMessage());
                   }
                 }
             }
