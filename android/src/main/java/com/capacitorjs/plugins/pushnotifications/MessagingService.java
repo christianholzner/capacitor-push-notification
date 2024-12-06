@@ -58,7 +58,7 @@ public class MessagingService extends FirebaseMessagingService {
 
 							// Resetting the original ring mode, volume and dnd mode
 								new Handler(Looper.getMainLooper()).postDelayed(() -> {
-									audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+									audioManager.setRingerMode(originalRingMode);
 									audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, originalNotificationVolume, 0);
 								}, getSoundFileDuration(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)));
 						}
