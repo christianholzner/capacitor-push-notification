@@ -2,9 +2,11 @@ package com.capacitorjs.plugins.pushnotifications;
 
 // import static androidx.core.content.ContextCompat.getSystemService;
 
+import android.app.NotificationManager;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -41,25 +43,71 @@ public class MessagingService extends FirebaseMessagingService {
 						var audioManager = (AudioManager) getSystemService(ContextWrapper.AUDIO_SERVICE);
 						if(audioManager != null) {
 							int originalRingMode = audioManager.getRingerMode();
+              // boolean volumeFixed = audioManager.isVolumeFixed();
 							int originalNotificationVolume = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
 							int maxNotificationVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION);
 
 							Log.i("MessagingService", "originalRingMode " + originalRingMode + " " + originalNotificationVolume + " " + maxNotificationVolume);
-							// When DND mode is enabled, we get ringerMode as silent even though actual ringer mode is Normal
+              var notificationManager = (NotificationManager) getSystemService(ContextWrapper.NOTIFICATION_SERVICE);
+              int isDndModeEnabled = 0;
+              if (notificationManager != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                  isDndModeEnabled = notificationManager.getCurrentInterruptionFilter();
+                }
+                if (isDndModeEnabled != NotificationManager.INTERRUPTION_FILTER_ALL && originalRingMode == AudioManager.RINGER_MODE_SILENT && originalNotificationVolume != 0) {
+                  originalRingMode = AudioManager.RINGER_MODE_NORMAL;
+                }
+              }
+              Log.i("MessagingService", "isDndModeEnabled "+isDndModeEnabled);
+              // When DND mode is enabled, we get ringerMode as silent even though actual ringer mode is Normal
 							//          int isDndModeEnabled = NotificationManagerCompat.from(myContext).getCurrentInterruptionFilter();
 							//          if (isDndModeEnabled != NotificationManager.INTERRUPTION_FILTER_ALL && originalRingMode == AudioManager.RINGER_MODE_SILENT && originalNotificationVolume != 0) {
 							//            originalRingMode = AudioManager.RINGER_MODE_NORMAL;
 							//          }
-							Log.i("MessagingService", "originalNotificationVolume "+originalNotificationVolume);
-							int newVolume = maxNotificationVolume; // ringToneVolume != null ? (int) Math.ceil(maxNotificationVolume * ringToneVolume) : originalNotificationVolume;
+							Log.i("MessagingService", "originalNotificationVolume "+originalNotificationVolume+" maxNotificationVolume "+maxNotificationVolume);
+              // ringToneVolume != null ? (int) Math.ceil(maxNotificationVolume * ringToneVolume) : originalNotificationVolume;
 
-							audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-							audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, newVolume, 0);
+              try {
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+              } catch (Exception e) {
+                Log.i("MessagingService", "RINGER_MODE_NORMAL not set");
+              }
 
+              Log.i("MessagingService", "RINGER_MODE_NORMAL ");
+
+              try {
+                audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, maxNotificationVolume, 0);
+              } catch (Exception e) {
+                Log.i("MessagingService", "maxNotificationVolume not set");
+              }
+
+              int sv1 = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
+              Log.i("MessagingService", "sv1 "+sv1);
 							// Resetting the original ring mode, volume and dnd mode
-								new Handler(Looper.getMainLooper()).postDelayed(() -> {
-									audioManager.setRingerMode(originalRingMode);
-									audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, originalNotificationVolume, 0);
+              int finalOriginalRingMode = originalRingMode;
+              int finalIsDndModeEnabled = isDndModeEnabled;
+              new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                  try {
+                    audioManager.setRingerMode(finalOriginalRingMode);
+                  } catch (Exception e) {
+                    Log.i("MessagingService", "finalOriginalRingMode not set");
+                  }
+
+                  try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                      notificationManager.setInterruptionFilter(finalIsDndModeEnabled);
+                    }
+                  } catch (Exception e) {
+                    Log.i("MessagingService", "setInterruptionFilter fehler");
+                  }
+
+                  try {
+                    audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, originalNotificationVolume, 0);
+                  } catch (Exception e) {
+                    Log.i("MessagingService", "originalNotificationVolume not set");
+                  }
+                  int sv2 = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
+                  Log.i("MessagingService", "sv2 "+sv2);
 								}, getSoundFileDuration(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)));
 						}
 					}
