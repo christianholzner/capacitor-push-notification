@@ -43,7 +43,7 @@ public class MessagingService extends FirebaseMessagingService {
 						var audioManager = (AudioManager) getSystemService(ContextWrapper.AUDIO_SERVICE);
 						if(audioManager != null) {
 							int originalRingMode = audioManager.getRingerMode();
-              // boolean volumeFixed = audioManager.isVolumeFixed();
+              //boolean volumeFixed = audioManager.isVolumeFixed();
 							int originalNotificationVolume = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
 							int maxNotificationVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION);
 
@@ -72,8 +72,8 @@ public class MessagingService extends FirebaseMessagingService {
               } catch (Exception e) {
                 Log.i("MessagingService", "RINGER_MODE_NORMAL not set");
               }
-
-              Log.i("MessagingService", "RINGER_MODE_NORMAL ");
+              int originalRingMode1 = audioManager.getRingerMode();
+              Log.i("MessagingService", "RINGER_MODE_NORMAL "+originalRingMode1);
 
               try {
                 audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, maxNotificationVolume, 0);
