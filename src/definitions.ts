@@ -159,7 +159,7 @@ export interface PushNotificationsPlugin {
    *
    * @since 1.0.0
    */
-  
+
   /**
    * Called when the push notification registration finishes without problems.
    *
@@ -189,10 +189,10 @@ export interface PushNotificationsPlugin {
    *
    * @since 1.0.0
    */
-    addListener(
-      eventName: 'silentNotificationReceived',
-      listenerFunc: (notification: PushNotificationSchema) => void,
-    ): Promise<PluginListenerHandle> & PluginListenerHandle;
+  addListener(
+    eventName: 'silentNotificationReceived',
+    listenerFunc: (notification: PushNotificationSchema) => void,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   /**
    * Called when the device receives a push notification.

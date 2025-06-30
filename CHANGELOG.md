@@ -3,22 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.1](https://github.com/ionic-team/capacitor-plugins/compare/@capacitor/push-notifications@7.0.0...@capacitor/push-notifications@7.0.1) (2025-04-02)
 
-## [6.21.0](https://github.com/CAUCA-9-1-1/capacitor-push-notification/compare/v6.20.0...v6.21.0) (2024-06-20)
+**Note:** Version bump only for package @capacitor/push-notifications
 
-### Features
+# [7.0.0](https://github.com/ionic-team/capacitor-plugins/compare/@capacitor/push-notifications@7.0.0-rc.0...@capacitor/push-notifications@7.0.0) (2025-01-20)
 
-- Save acknowledge notification on IOS to send it later if needed
+**Note:** Version bump only for package @capacitor/push-notifications
 
-## [6.20.0](https://github.com/CAUCA-9-1-1/capacitor-push-notification/compare/v6.20.0) (2024-06-20)
+# [7.0.0-rc.0](https://github.com/ionic-team/capacitor-plugins/compare/@capacitor/push-notifications@7.0.0-alpha.2...@capacitor/push-notifications@7.0.0-rc.0) (2025-01-13)
 
-### Features
+**Note:** Version bump only for package @capacitor/push-notifications
 
-- Ask iOS permission for "Critical Alert"
-- Validate OS permission before Android 13
-- Send acknowledge to remote server on Android
-- Create notification when iOS app received background push notifications and app is inactive
-- Send acknowledge to remote server on IOS
+# [7.0.0-alpha.2](https://github.com/ionic-team/capacitor-plugins/compare/@capacitor/push-notifications@7.0.0-alpha.1...@capacitor/push-notifications@7.0.0-alpha.2) (2024-12-19)
+
+**Note:** Version bump only for package @capacitor/push-notifications
+
+# [7.0.0-alpha.1](https://github.com/ionic-team/capacitor-plugins/compare/@capacitor/push-notifications@6.0.2...@capacitor/push-notifications@7.0.0-alpha.1) (2024-12-16)
+
+**Note:** Version bump only for package @capacitor/push-notifications
+
+## [6.0.2](https://github.com/ionic-team/capacitor-plugins/compare/@capacitor/push-notifications@6.0.1...@capacitor/push-notifications@6.0.2) (2024-08-08)
+
+**Note:** Version bump only for package @capacitor/push-notifications
 
 ## [6.0.1](https://github.com/ionic-team/capacitor-plugins/compare/@capacitor/push-notifications@6.0.0...@capacitor/push-notifications@6.0.1) (2024-06-13)
 
