@@ -195,8 +195,13 @@ const getDeliveredNotifications = async () => {
 * [`listChannels()`](#listchannels)
 * [`checkPermissions()`](#checkpermissions)
 * [`requestPermissions()`](#requestpermissions)
+* [`openDndMenu()`](#opendndmenu)
+* [`checkPermissionsDND()`](#checkpermissionsdnd)
+* [`requestPermissionsDND()`](#requestpermissionsdnd)
+* [`requestPermissionsDND2()`](#requestpermissionsdnd2)
 * [`addListener('registration', ...)`](#addlistenerregistration-)
 * [`addListener('registrationError', ...)`](#addlistenerregistrationerror-)
+* [`addListener('silentNotificationReceived', ...)`](#addlistenersilentnotificationreceived-)
 * [`addListener('pushNotificationReceived', ...)`](#addlistenerpushnotificationreceived-)
 * [`addListener('pushNotificationActionPerformed', ...)`](#addlistenerpushnotificationactionperformed-)
 * [`removeAllListeners()`](#removealllisteners)
@@ -382,6 +387,66 @@ the permission without prompting again.
 --------------------
 
 
+### openDndMenu()
+
+```typescript
+openDndMenu() => Promise<PermissionStatus>
+```
+
+openDndMenu.
+
+**Returns:** <code>Promise&lt;<a href="#permissionstatus">PermissionStatus</a>&gt;</code>
+
+**Since:** 1.0.0
+
+--------------------
+
+
+### checkPermissionsDND()
+
+```typescript
+checkPermissionsDND() => Promise<PermissionStatus>
+```
+
+checkPermissionsDND.
+
+**Returns:** <code>Promise&lt;<a href="#permissionstatus">PermissionStatus</a>&gt;</code>
+
+**Since:** 1.0.0
+
+--------------------
+
+
+### requestPermissionsDND()
+
+```typescript
+requestPermissionsDND() => Promise<PermissionStatus>
+```
+
+requestPermissionsDND.
+
+**Returns:** <code>Promise&lt;<a href="#permissionstatus">PermissionStatus</a>&gt;</code>
+
+**Since:** 1.0.0
+
+--------------------
+
+
+### requestPermissionsDND2()
+
+```typescript
+requestPermissionsDND2() => Promise<PermissionStatus>
+```
+
+requestPermissionsDND2.
+
+**Returns:** <code>Promise&lt;<a href="#permissionstatus">PermissionStatus</a>&gt;</code>
+
+**Since:** 1.0.0
+
+--------------------
+
+
 ### addListener('registration', ...)
 
 ```typescript
@@ -420,6 +485,26 @@ Provides an error with the registration problem.
 | **`listenerFunc`** | <code>(error: <a href="#registrationerror">RegistrationError</a>) =&gt; void</code> |
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+**Since:** 1.0.0
+
+--------------------
+
+
+### addListener('silentNotificationReceived', ...)
+
+```typescript
+addListener(eventName: 'silentNotificationReceived', listenerFunc: (notification: PushNotificationSchema) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+Called when the device receives a background push notification.
+
+| Param              | Type                                                                                                 |
+| ------------------ | ---------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'silentNotificationReceived'</code>                                                            |
+| **`listenerFunc`** | <code>(notification: <a href="#pushnotificationschema">PushNotificationSchema</a>) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 
 **Since:** 1.0.0
 

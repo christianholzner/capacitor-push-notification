@@ -58,7 +58,19 @@ public class MessagingService extends FirebaseMessagingService {
                   originalRingMode = AudioManager.RINGER_MODE_NORMAL;
                 }
               }
+              int finalIsDndModeEnabled = isDndModeEnabled;
+
               Log.i("MessagingService", "isDndModeEnabled "+isDndModeEnabled);
+              try {  // Samsung Geräte benötigen setInterruptionFilter=INTERRUPTION_FILTER_All (1)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && finalIsDndModeEnabled != 1) {
+                  notificationManager.setInterruptionFilter(1);
+                  isDndModeEnabled = notificationManager.getCurrentInterruptionFilter();
+                  Log.i("MessagingService", "isDndModeEnabled2 "+isDndModeEnabled);
+                }
+              } catch (Exception e) {
+                Log.e("MessagingService", "setInterruptionFilter fehler", e);
+              }
+
               // When DND mode is enabled, we get ringerMode as silent even though actual ringer mode is Normal
 							//          int isDndModeEnabled = NotificationManagerCompat.from(myContext).getCurrentInterruptionFilter();
 							//          if (isDndModeEnabled != NotificationManager.INTERRUPTION_FILTER_ALL && originalRingMode == AudioManager.RINGER_MODE_SILENT && originalNotificationVolume != 0) {
@@ -70,7 +82,7 @@ public class MessagingService extends FirebaseMessagingService {
               try {
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
               } catch (Exception e) {
-                Log.i("MessagingService", "RINGER_MODE_NORMAL not set");
+                Log.e("MessagingService", "RINGER_MODE_NORMAL not set", e);
               }
               int originalRingMode1 = audioManager.getRingerMode();
               Log.i("MessagingService", "RINGER_MODE_NORMAL "+originalRingMode1);
@@ -78,19 +90,18 @@ public class MessagingService extends FirebaseMessagingService {
               try {
                 audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, maxNotificationVolume, 0);
               } catch (Exception e) {
-                Log.i("MessagingService", "maxNotificationVolume not set");
+                Log.e("MessagingService", "maxNotificationVolume not set", e);
               }
 
               int sv1 = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
               Log.i("MessagingService", "sv1 "+sv1);
 							// Resetting the original ring mode, volume and dnd mode
               int finalOriginalRingMode = originalRingMode;
-              int finalIsDndModeEnabled = isDndModeEnabled;
               new Handler(Looper.getMainLooper()).postDelayed(() -> {
                   try {
                     audioManager.setRingerMode(finalOriginalRingMode);
                   } catch (Exception e) {
-                    Log.i("MessagingService", "finalOriginalRingMode not set");
+                    Log.e("MessagingService", "finalOriginalRingMode not set", e);
                   }
 
                   try {
@@ -98,13 +109,13 @@ public class MessagingService extends FirebaseMessagingService {
                       notificationManager.setInterruptionFilter(finalIsDndModeEnabled);
                     }
                   } catch (Exception e) {
-                    Log.i("MessagingService", "setInterruptionFilter fehler");
+                    Log.e("MessagingService", "setInterruptionFilter fehler", e);
                   }
 
                   try {
                     audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, originalNotificationVolume, 0);
                   } catch (Exception e) {
-                    Log.i("MessagingService", "originalNotificationVolume not set");
+                    Log.e("MessagingService", "originalNotificationVolume not set", e);
                   }
                   int sv2 = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
                   Log.i("MessagingService", "sv2 "+sv2);
