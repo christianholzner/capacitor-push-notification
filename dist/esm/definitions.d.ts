@@ -1,5 +1,5 @@
 import type { PermissionState, PluginListenerHandle } from '@capacitor/core';
-export declare type PresentationOption = 'badge' | 'sound' | 'alert' | 'criticalAlert';
+export type PresentationOption = 'badge' | 'sound' | 'alert' | 'criticalAlert';
 declare module '@capacitor/cli' {
     interface PluginsConfig {
         /**
@@ -134,13 +134,6 @@ export interface PushNotificationsPlugin {
      * @since 1.0.0
      */
     requestPermissionsDND2(): Promise<PermissionStatus>;
-    /**
-     * Called when the push notification registration finishes without problems.
-     *
-     * Provides the push notification token.
-     *
-     * @since 1.0.0
-     */
     /**
      * Called when the push notification registration finishes without problems.
      *
@@ -393,12 +386,12 @@ export interface Channel {
  * The importance level. For more details, see the [Android Developer Docs](https://developer.android.com/reference/android/app/NotificationManager#IMPORTANCE_DEFAULT)
  * @since 1.0.0
  */
-export declare type Importance = 1 | 2 | 3 | 4 | 5;
+export type Importance = 1 | 2 | 3 | 4 | 5;
 /**
  * The notification visibility. For more details, see the [Android Developer Docs](https://developer.android.com/reference/androidx/core/app/NotificationCompat#VISIBILITY_PRIVATE)
  * @since 1.0.0
  */
-export declare type Visibility = -1 | 0 | 1;
+export type Visibility = -1 | 0 | 1;
 export interface ListChannelsResult {
     /**
      * List of all the Channels created by your app.
@@ -419,29 +412,29 @@ export interface PermissionStatus {
  * @deprecated Use 'Channel`.
  * @since 1.0.0
  */
-export declare type NotificationChannel = Channel;
+export type NotificationChannel = Channel;
 /**
  * @deprecated Use `ListChannelsResult`.
  * @since 1.0.0
  */
-export declare type NotificationChannelList = ListChannelsResult;
+export type NotificationChannelList = ListChannelsResult;
 /**
  * @deprecated Use `PushNotificationSchema`.
  * @since 1.0.0
  */
-export declare type PushNotification = PushNotificationSchema;
+export type PushNotification = PushNotificationSchema;
 /**
  * @deprecated Use `ActionPerformed`.
  * @since 1.0.0
  */
-export declare type PushNotificationActionPerformed = ActionPerformed;
+export type PushNotificationActionPerformed = ActionPerformed;
 /**
  * @deprecated Use `DeliveredNotifications`.
  * @since 1.0.0
  */
-export declare type PushNotificationDeliveredList = DeliveredNotifications;
+export type PushNotificationDeliveredList = DeliveredNotifications;
 /**
  * @deprecated Use `Token`.
  * @since 1.0.0
  */
-export declare type PushNotificationToken = Token;
+export type PushNotificationToken = Token;
