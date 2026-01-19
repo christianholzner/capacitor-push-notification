@@ -61,9 +61,7 @@ export interface PushNotificationsPlugin {
    *
    * @since 1.0.0
    */
-  removeDeliveredNotifications(
-    delivered: DeliveredNotifications,
-  ): Promise<void>;
+  removeDeliveredNotifications(delivered: DeliveredNotifications): Promise<void>;
 
   /**
    * Remove all the notifications from the notifications screen.
@@ -159,18 +157,7 @@ export interface PushNotificationsPlugin {
    *
    * @since 1.0.0
    */
-
-  /**
-   * Called when the push notification registration finishes without problems.
-   *
-   * Provides the push notification token.
-   *
-   * @since 1.0.0
-   */
-  addListener(
-    eventName: 'registration',
-    listenerFunc: (token: Token) => void,
-  ): Promise<PluginListenerHandle>;
+  addListener(eventName: 'registration', listenerFunc: (token: Token) => void): Promise<PluginListenerHandle>;
 
   /**
    * Called when the push notification registration finished with problems.
